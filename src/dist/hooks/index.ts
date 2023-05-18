@@ -6,16 +6,20 @@ import { useEffect, useState } from "react";
 export const useController = () => {
   const router = useRouter();
   const [data, setData] = useState<Partial<Home>>({});
+  const [search, setSearch] = useState("Jakarta")
 
   useEffect(() => {
-    axiosInstance("/api/testing", {
+    axiosInstance(`/api/${search}`, {
       params: router.query,
     }).then((value) => {
       setData(value.data);
-    });
-  }, [router.query]);
+    }).catch((e) =>{
+      console.log(e);
+    })
+  }, [router.query, search]);
 
   return{
-    data
+    data,
+    setSearch
   }
 }

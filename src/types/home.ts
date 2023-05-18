@@ -11,7 +11,7 @@ export interface Home{
     lat: number;
   }
   weather: {
-    [key: string] : Iweather;
+    [key: number] : Iweather;
   };
   base:string;
   visibility: number;
