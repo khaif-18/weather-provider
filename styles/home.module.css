@@ -1,0 +1,96 @@
+.container {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.content {
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 24px;
+  max-width: 400px;
+  width: 100%;
+}
+
+.title {
+  @apply text-2xl font-bold text-center mb-6;
+}
+
+.searchForm {
+  @apply flex mb-6;
+}
+
+.searchInput {
+  @apply px-4 py-2 text-gray-800 rounded-l-full focus:outline-none focus:ring-blue-500 focus:border-blue-500 flex-grow shadow-sm;
+}
+
+.searchButton {
+  @apply bg-blue-500 hover:bg-blue-600 text-white rounded-r-lg px-4 py-2 ml-4;
+}
+
+.weatherInfo {
+  @apply flex flex-col items-center;
+}
+
+.cityName {
+  @apply text-2xl font-semibold mb-2;
+}
+
+.weatherDetails {
+  @apply flex items-center;
+}
+
+.weatherIconContainer {
+  @apply relative w-20 h-20;
+}
+
+.weatherIconFrame {
+  @apply absolute top-0 left-0 right-0 bottom-0;
+}
+
+.temperature {
+  @apply text-3xl font-semibold;
+}
+
+.weather {
+  @apply text-gray-600 text-lg;
+}
+
+.feelsLike,
+.humidity {
+  @apply text-gray-600;
+}
+
+.weatherAdditionalInfo {
+  @apply mt-4;
+}
+
+.wind {
+  @apply text-gray-600;
+}
+
+.windSpeed {
+  @apply text-gray-600;
+}
+
+.clouds {
+  @apply relative cursor-pointer;
+}
+
+.clouds:hover .cloudIcon {
+  @apply animate-bounce;
+}
+
+.cloudIcon {
+  @apply w-6 h-6 text-gray-600;
+}
+
+.windBar {
+  @apply h-2 bg-gray-200 rounded-full overflow-hidden;
+}
+
+.windBarInner {
+  @apply h-full bg-blue-500;
+}
