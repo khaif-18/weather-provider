@@ -99,10 +99,10 @@ export default function Home() {
                 Clouds: {data.clouds?.all}%
               </p>
               <p className="mt-4 p-4 bg-gradient-to-r from-yellow-200 to-yellow-500 rounded-lg shadow-lg">
-                Sunrise: {new Date(data.sys?.sunrise * 1000).toLocaleTimeString()}
+                Sunrise: {data.sys?.sunrise ? new Date(data.sys?.sunrise * 1000).toLocaleTimeString() : ""}
               </p>
               <p className="mt-4 p-4 bg-gradient-to-r from-gray-200 to-gray-500 rounded-lg shadow-lg;">
-                Sunset: {new Date(data.sys?.sunset * 1000).toLocaleTimeString()}
+                Sunset: {data.sys?.sunset ? new Date(data.sys?.sunrise * 1000).toLocaleTimeString() : ""}
               </p>
             </div>
           </div>
