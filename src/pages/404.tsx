@@ -13,7 +13,7 @@ export default function NotFound() {
         <button
           className="px-4 py-2 rounded-md text-white bg-gradient-to-r from-teal-400 to-teal-600 hover:from-teal-500 hover:to-teal-700"
           onClick={() => {
-            router.push(`/group-list`);
+            router.push(`/home`);
           }}
         >
           Kembali ke Home
