@@ -1,7 +1,7 @@
 import axios, { AxiosResponse } from "axios";
 
 const config: { withCredentials: boolean } = {
-  withCredentials: true,
+  withCredentials: false,
 };
 
 export const axiosInstance = axios.create(config);

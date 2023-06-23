@@ -2,7 +2,7 @@ import axios from "axios";
 import { NextApiRequest, NextApiResponse } from "next";
 
 const config: { baseURL: any; withCredentials: boolean } = {
-  withCredentials: true,
+  withCredentials: false,
   baseURL: process.env.SERVICE_URL,
 };
 

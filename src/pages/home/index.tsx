@@ -60,10 +60,10 @@ export default function HomePage() {
                   <div className={styles.weatherIconFrame}>
                     <Image
                       id="wIcon"
-                      src={`https://openweathermap.org/img/w/${data.weather?.[0].icon}.png`}
+                      src={`https://openweathermap.org/img/w/${data.weather?.[0].icon ?? "03d"}.png`}
                       alt="Weather Icon"
-                      layout="fill"
-                      objectFit="contain"
+                      width={80}
+                      height={80}
                     />
                   </div>
                 </div>
