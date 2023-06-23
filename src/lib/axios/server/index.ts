@@ -3,7 +3,8 @@ import { NextApiRequest, NextApiResponse } from "next";
 
 const config: { baseURL: any; withCredentials: boolean } = {
   withCredentials: false,
-  baseURL: process.env.SERVICE_URL,
+  baseURL: `https://api.openweathermap.org/data/2.5/weather`,
+  // baseURL: process.env.SERVICE_URL,
 };
 
 export const axiosInstance = axios.create(config);
