@@ -4,7 +4,7 @@ import { useController } from "@/dist/hooks";
 import Image from "next/image";
 import styles from "styles/home.module.css";
 
-export default function Home() {
+export default function HomePage() {
   const { data, setSearch } = useController();
   const [searchValue, setSearchValue] = useState("");
 
