@@ -1,4 +1,4 @@
-export interface Home {
+export interface WeatherData {
   coord: Coord
   weather: Weather[]
   base: string
