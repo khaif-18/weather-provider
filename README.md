@@ -32,7 +32,7 @@ https://github.com/khaif-18/weather-provider.git
 2. Change Into Project Directory:
 
 ```bash
-cd weather-app
+cd weather-provider
 ```
 
 3. Install the dependencies using Yarn:
