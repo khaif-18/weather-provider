@@ -1,37 +1,56 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+# ── Nuxt ──────────────────────────────────────────
+.nuxt/
+.output/
+.data/
+.nitro/
+.cache/
 
-# dependencies
-/node_modules
-/.pnp
+# ── Dependencies ──────────────────────────────────
+node_modules/
+.pnp
 .pnp.js
 
-# testing
-/coverage
+# ── Bun ───────────────────────────────────────────
+bun.lockb
+*.bun
 
-# next.js
-/.next/
-/out/
+# ── Environment ───────────────────────────────────
+.env
+.env.*
+!.env.example
 
-# production
-/build
+# ── Build output ──────────────────────────────────
+dist/
+.vercel/
+.netlify/
 
-# misc
-.DS_Store
-*.pem
+# ── Testing ───────────────────────────────────────
+coverage/
+.vitest-cache/
 
-# debug
+# ── TypeScript ────────────────────────────────────
+*.tsbuildinfo
+
+# ── Logs ──────────────────────────────────────────
+logs/
+*.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-.pnpm-debug.log*
+pnpm-debug.log*
 
-# local env files
-.env*.local
-.env
+# ── OS ────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+desktop.ini
 
-# vercel
-.vercel
-
-# typescript
-*.tsbuildinfo
-next-env.d.ts
+# ── Editor ────────────────────────────────────────
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?

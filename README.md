@@ -1,69 +1,135 @@
-# Weather App
+# 🌤️ Aether Weather App
 
-<!-- ![Weather App Screenshot](screenshot.png) -->
+Aplikasi cuaca modern dibangun dengan **Nuxt 4**, **Bun**, dan data dari **OpenWeatherMap API**.
 
-A simple weather app built with React and Next.js that allows users to search for weather information in different cities. The app retrieves weather data from the OpenWeatherMap API and displays the current temperature, weather conditions, humidity, and wind speed.
+## Tech Stack
 
+| Layer      | Library                     |
+|------------|-----------------------------|
+| Framework  | Nuxt 4.3.1                  |
+| Runtime    | Bun                         |
+| Styling    | Tailwind CSS                |
+| State      | Pinia                       |
+| Data Fetch | TanStack Query (Vue Query)  |
+| Map        | Leaflet                     |
+| Charts     | Apache ECharts + vue-echarts|
+| Testing    | Vitest + @nuxt/test-utils   |
+| Language   | TypeScript (strict)         |
 
-## Features
+---
 
-- Search for weather information in any city around the world.
-- Real-time updates for temperature, weather conditions, humidity, and wind speed.
-- Beautiful gradient background based on the weather condition.
+## 🚀 Quick Start
 
-## Technologies Used
-
-- React
-- Next.js
-- Axios
-- Tailwind CSS
-- React Icons
-
-## Getting Started
-
-Follow the instructions below to set up the project on your local machine.
-
-1. Clone the repository:
+### 1. Clone & Install
 
 ```bash
-https://github.com/khaif-18/weather-provider.git
+git clone <repo-url>
+cd weather-app
+
+# Install dependencies dengan Bun
+bun install
 ```
 
-2. Change Into Project Directory:
+### 2. Environment Variables
 
 ```bash
-cd weather-provider
+cp .env.example .env
 ```
 
-3. Install the dependencies using Yarn:
+Edit `.env` dan isi API key dari [OpenWeatherMap](https://openweathermap.org/api):
+
+```env
+NUXT_PUBLIC_OWM_API_KEY=your_api_key_here
+```
+
+> 💡 Daftar gratis di openweathermap.org, API key aktif dalam ~30 menit.
+
+### 3. Jalankan Dev Server
 
 ```bash
-yarn
+bun run dev
 ```
 
-4. Set up environment variables:
+App berjalan di `http://localhost:3000`
 
-Create a .env.local file in the root directory and add your API keys:
+---
+
+## 📋 Scripts
 
 ```bash
-NEXT_PUBLIC_WEATHER_KEY=your_openweathermap_api_key
-NEXT_PUBLIC_TIME_KEY=your_abstractapi_time_key
+bun run dev          # Development server
+bun run build        # Production build
+bun run preview      # Preview production build
+bun run test         # Run Vitest
+bun run test:ui      # Vitest UI mode
+bun run test:coverage # Coverage report
+bun run typecheck    # TypeScript check
 ```
 
-5. Run the development server:
+---
+
+## 🏗️ Atomic Design Structure
+
+```
+components/
+├── atoms/          # BaseButton, BaseInput, BaseSelect, BaseToggle, BaseCard, ...
+├── molecules/      # SearchBar, UnitToggle, ForecastCard, StatItem, ...
+├── organisms/      # WeatherHero, WeatherStats, WeatherMap, WeatherChart, ...
+└── templates/      # WeatherLayout, ErrorState
+```
+
+### Prinsip
+
+- **Atoms** → komponen terkecil, hanya menerima props, tidak tahu soal state global
+- **Molecules** → gabungan 2-4 atoms, memiliki satu tanggung jawab
+- **Organisms** → terhubung ke store/composable, self-contained section
+- **Templates** → layout shell berbasis slot
+- **Pages** → orchestrasi data fetching dan komposisi organisms
+
+---
+
+## 🌤️ Fitur
+
+- ✅ Current weather (suhu, kelembaban, angin, tekanan, visibilitas)
+- ✅ Hourly forecast (36 jam ke depan)
+- ✅ 7-day forecast strip
+- ✅ Grafik suhu, curah hujan & angin (ECharts)
+- ✅ Peta cuaca interaktif (Leaflet + OWM tiles)
+- ✅ Search kota dengan autocomplete
+- ✅ Geolocation otomatis
+- ✅ Toggle °C / °F
+- ✅ Dynamic background sesuai kondisi cuaca
+- ✅ Responsive design (mobile-first)
+- ✅ SSR + Hydration support
+
+---
+
+## 🧪 Testing
+
+Unit test ada di `tests/unit/`. Jalankan:
 
 ```bash
-yarn dev
+bun run test
 ```
 
-6. Open your browser and navigate to http://localhost:3000 to see the app in action.
+Test coverage meliputi:
+- `utils/formatters.ts` — format helpers
+- `utils/weatherConditions.ts` — condition mapping
+- Component atoms (BaseButton, BaseToggle)
+- Stores (useAppStore)
 
-## Deploying to Vercel
+---
 
-This app is set up for easy deployment to Vercel. Simply create an account on Vercel, link your GitHub repository, and it will automatically deploy on each push to the master branch.
+## 🔑 OpenWeatherMap API
 
-## Contributing
+API yang digunakan:
 
-Contributions are welcome! If you find any issues or want to add new features, feel free to open a pull request.
+| Endpoint | Kegunaan |
+|----------|----------|
+| `/data/2.5/weather` | Current weather |
+| `/data/2.5/forecast` | 5-day/3-hour forecast |
+| `/geo/1.0/direct` | Geocoding (search kota) |
+| `/geo/1.0/reverse` | Reverse geocoding |
+| `/map/{layer}/{z}/{x}/{y}.png` | Weather map tiles |
 
-
+Semua request dibungkus di `services/weatherApi.ts`.

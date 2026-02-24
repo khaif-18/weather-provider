@@ -1,0 +1,110 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Fira+Code:wght@400;500&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  *, *::before, *::after {
+    box-sizing: border-box;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    @apply bg-canvas font-body text-ink;
+    min-height: 100dvh;
+  }
+
+  h1, h2, h3 {
+    @apply font-display;
+  }
+
+  ::selection {
+    @apply bg-sky-pale text-sky;
+  }
+
+  /* Subtle Nordic scrollbar */
+  ::-webkit-scrollbar { width: 4px; height: 4px; }
+  ::-webkit-scrollbar-track { @apply bg-canvas; }
+  ::-webkit-scrollbar-thumb { @apply bg-ink-faint rounded-full; }
+  ::-webkit-scrollbar-thumb:hover { @apply bg-ink-soft; }
+}
+
+@layer components {
+  /* ─── Card surface — white with airy shadow ─── */
+  .card {
+    @apply bg-canvas-pure rounded-2xl shadow-card border border-ink-faint/30;
+  }
+  .card-md {
+    @apply bg-canvas-pure rounded-2xl shadow-card-md border border-ink-faint/20;
+  }
+
+  /* ─── Temperature number — editorial serif ─── */
+  .temp-hero {
+    @apply font-display font-bold leading-none tracking-tight text-ink;
+    font-size: clamp(5rem, 12vw, 8rem);
+    letter-spacing: -0.04em;
+  }
+
+  /* ─── Label pill ─── */
+  .pill {
+    @apply inline-flex items-center gap-1 px-2.5 py-1 rounded-full
+           text-xs font-body font-medium border;
+  }
+
+  /* ─── Skeleton — airy grey shimmer ─── */
+  .skeleton {
+    background: linear-gradient(
+      90deg,
+      #F0F2F6 25%,
+      #E4E7EF 50%,
+      #F0F2F6 75%
+    );
+    background-size: 200% 100%;
+    @apply animate-shimmer rounded-2xl;
+  }
+
+  /* ─── Dot grid texture ─── */
+  .dot-grid {
+    background-image: radial-gradient(circle, #C4C9D4 1px, transparent 1px);
+    background-size: 24px 24px;
+  }
+
+  /* ─── Divider ─── */
+  .divider {
+    @apply border-t border-ink-faint/30;
+  }
+
+  /* ─── Stat row ─── */
+  .stat-row {
+    @apply flex items-center justify-between py-3 divider first:pt-0 last:border-0 last:pb-0;
+  }
+}
+
+@layer utilities {
+  .text-balance { text-wrap: balance; }
+
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+  .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+  /* Staggered entrance */
+  .stagger > *:nth-child(1)  { animation-delay: 0ms; }
+  .stagger > *:nth-child(2)  { animation-delay: 60ms; }
+  .stagger > *:nth-child(3)  { animation-delay: 120ms; }
+  .stagger > *:nth-child(4)  { animation-delay: 180ms; }
+  .stagger > *:nth-child(5)  { animation-delay: 240ms; }
+  .stagger > *:nth-child(6)  { animation-delay: 300ms; }
+  .stagger > *:nth-child(7)  { animation-delay: 360ms; }
+  .stagger > *:nth-child(8)  { animation-delay: 420ms; }
+
+  .stagger > * {
+    opacity: 0;
+    animation: fadeUp 0.45s ease-out forwards;
+  }
+}

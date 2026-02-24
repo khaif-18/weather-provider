@@ -1,0 +1,9 @@
+[install]
+auto = "auto"
+
+[install.cache]
+disable = false
+disableManifest = false
+
+[run]
+bun = true
