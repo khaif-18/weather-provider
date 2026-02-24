@@ -21,6 +21,7 @@
     "@pinia/nuxt": "^0.11.3",
     "@tanstack/vue-query": "^5.62.7",
     "@tanstack/vue-table": "^8.20.5",
+    "@vueuse/nuxt": "^14.2.1",
     "echarts": "^5.5.1",
     "leaflet": "^1.9.4",
     "nuxt": "^4.3.1",
