@@ -8,14 +8,13 @@ export default defineNuxtConfig({
     '@pinia/nuxt',
   ],
 
-  // ── Deployment: Static SPA untuk Netlify ─────────────────────────────
-  // SSR dimatikan — semua rendering di client (cocok untuk weather app)
-  // Build output: .output/public/ → deploy sebagai static site
+  // ── Static SPA untuk Netlify ──────────────────────────────────────────
   ssr: false,
 
-  // Nuxt generate mode untuk static export
   nitro: {
-    preset: 'netlify-static',
+    // 'static' → output ke dist/ (sesuai log Netlify)
+    // jangan pakai netlify-static karena konflik dengan nuxt generate
+    preset: 'static',
   },
 
   // Auto-import components by directory
@@ -36,12 +35,10 @@ export default defineNuxtConfig({
     ],
   },
 
-  // Pinia
   pinia: {
     storesDirs: ['./stores/**'],
   },
 
-  // Runtime config (env vars)
   runtimeConfig: {
     public: {
       openWeatherApiKey: process.env.NUXT_PUBLIC_OWM_API_KEY || '',
@@ -50,20 +47,19 @@ export default defineNuxtConfig({
     },
   },
 
-  // CSS
   css: [
     '~/assets/css/main.css',
     '~/assets/css/animations.css',
     'leaflet/dist/leaflet.css',
   ],
 
-  // TypeScript
   typescript: {
     strict: true,
-    typeCheck: true,
+    // MATIKAN saat build — penyebab timeout 18 menit di CI
+    // Jalankan typecheck manual: bun run typecheck
+    typeCheck: false,
   },
 
-  // Vite
   vite: {
     optimizeDeps: {
       include: ['echarts', 'vue-echarts'],
