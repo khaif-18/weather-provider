@@ -6,8 +6,17 @@ export default defineNuxtConfig({
   modules: [
     '@nuxtjs/tailwindcss',
     '@pinia/nuxt',
-    '@vueuse/nuxt',
   ],
+
+  // ── Deployment: Static SPA untuk Netlify ─────────────────────────────
+  // SSR dimatikan — semua rendering di client (cocok untuk weather app)
+  // Build output: .output/public/ → deploy sebagai static site
+  ssr: false,
+
+  // Nuxt generate mode untuk static export
+  nitro: {
+    preset: 'netlify-static',
+  },
 
   // Auto-import components by directory
   components: [
@@ -27,7 +36,7 @@ export default defineNuxtConfig({
     ],
   },
 
-  // Pinia — storesDirs untuk Nuxt 4 (folder root, bukan app/)
+  // Pinia
   pinia: {
     storesDirs: ['./stores/**'],
   },
@@ -60,7 +69,4 @@ export default defineNuxtConfig({
       include: ['echarts', 'vue-echarts'],
     },
   },
-
-  // SSR - leaflet & echarts handled via .client.vue suffix
-  ssr: true,
 })
