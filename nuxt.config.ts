@@ -9,8 +9,14 @@ export default defineNuxtConfig({
 
   ssr: false,
 
-  // Hapus nitro preset — Nuxt 4 default sudah output ke .output/public
-  // preset 'static' menyebabkan dual output (dist/ DAN .output/public)
+  nitro: {
+    preset: 'static',
+    output: {
+      // Paksa output ke dist/ agar konsisten lokal dan CI
+      dir: 'dist',
+      publicDir: 'dist',
+    },
+  },
 
   components: [
     { path: '~/components/atoms', prefix: 'Base', pathPrefix: false },
