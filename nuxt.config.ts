@@ -1,4 +1,3 @@
-// nuxt.config.ts
 export default defineNuxtConfig({
   compatibilityDate: '2024-11-01',
   devtools: { enabled: true },
@@ -8,16 +7,11 @@ export default defineNuxtConfig({
     '@pinia/nuxt',
   ],
 
-  // ── Static SPA untuk Netlify ──────────────────────────────────────────
   ssr: false,
 
-  nitro: {
-    // 'static' → output ke dist/ (sesuai log Netlify)
-    // jangan pakai netlify-static karena konflik dengan nuxt generate
-    preset: 'static',
-  },
+  // Hapus nitro preset — Nuxt 4 default sudah output ke .output/public
+  // preset 'static' menyebabkan dual output (dist/ DAN .output/public)
 
-  // Auto-import components by directory
   components: [
     { path: '~/components/atoms', prefix: 'Base', pathPrefix: false },
     { path: '~/components/molecules', pathPrefix: false },
@@ -25,7 +19,6 @@ export default defineNuxtConfig({
     { path: '~/components/templates', pathPrefix: false },
   ],
 
-  // Auto-import composables
   imports: {
     dirs: [
       'composables/**',
@@ -55,8 +48,6 @@ export default defineNuxtConfig({
 
   typescript: {
     strict: true,
-    // MATIKAN saat build — penyebab timeout 18 menit di CI
-    // Jalankan typecheck manual: bun run typecheck
     typeCheck: false,
   },
 
