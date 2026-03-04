@@ -2,19 +2,23 @@
 
 Aplikasi cuaca modern dibangun dengan **Nuxt 4**, **Bun**, dan data dari **OpenWeatherMap API**.
 
+## Build Status
+
+[![Netlify Status](https://api.netlify.com/api/v1/badges/16f3958c-5d0c-4153-b1d5-a6721ca08918/deploy-status)](https://app.netlify.com/projects/kaether/deploys)
+
 ## Tech Stack
 
-| Layer      | Library                     |
-|------------|-----------------------------|
-| Framework  | Nuxt 4.3.1                  |
-| Runtime    | Bun                         |
-| Styling    | Tailwind CSS                |
-| State      | Pinia                       |
-| Data Fetch | TanStack Query (Vue Query)  |
-| Map        | Leaflet                     |
-| Charts     | Apache ECharts + vue-echarts|
-| Testing    | Vitest + @nuxt/test-utils   |
-| Language   | TypeScript (strict)         |
+| Layer      | Library                      |
+| ---------- | ---------------------------- |
+| Framework  | Nuxt 4.3.1                   |
+| Runtime    | Bun                          |
+| Styling    | Tailwind CSS                 |
+| State      | Pinia                        |
+| Data Fetch | TanStack Query (Vue Query)   |
+| Map        | Leaflet                      |
+| Charts     | Apache ECharts + vue-echarts |
+| Testing    | Vitest + @nuxt/test-utils    |
+| Language   | TypeScript (strict)          |
 
 ---
 
@@ -113,6 +117,7 @@ bun run test
 ```
 
 Test coverage meliputi:
+
 - `utils/formatters.ts` — format helpers
 - `utils/weatherConditions.ts` — condition mapping
 - Component atoms (BaseButton, BaseToggle)
@@ -124,12 +129,12 @@ Test coverage meliputi:
 
 API yang digunakan:
 
-| Endpoint | Kegunaan |
-|----------|----------|
-| `/data/2.5/weather` | Current weather |
-| `/data/2.5/forecast` | 5-day/3-hour forecast |
-| `/geo/1.0/direct` | Geocoding (search kota) |
-| `/geo/1.0/reverse` | Reverse geocoding |
-| `/map/{layer}/{z}/{x}/{y}.png` | Weather map tiles |
+| Endpoint                       | Kegunaan                |
+| ------------------------------ | ----------------------- |
+| `/data/2.5/weather`            | Current weather         |
+| `/data/2.5/forecast`           | 5-day/3-hour forecast   |
+| `/geo/1.0/direct`              | Geocoding (search kota) |
+| `/geo/1.0/reverse`             | Reverse geocoding       |
+| `/map/{layer}/{z}/{x}/{y}.png` | Weather map tiles       |
 
 Semua request dibungkus di `services/weatherApi.ts`.
