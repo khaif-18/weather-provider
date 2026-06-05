@@ -11,7 +11,9 @@ export function useWeather(
   const api = useWeatherApi()
 
   return useQuery<CurrentWeatherResponse>({
-    queryKey: computed(() => [QUERY_KEYS.CURRENT_WEATHER, city.value, unit.value]),
+    queryKey: computed(() => [
+      QUERY_KEYS.CURRENT_WEATHER, city.value, unit.value, lat?.value ?? null, lon?.value ?? null,
+    ]),
     queryFn: () => {
       if (lat?.value != null && lon?.value != null) {
         return api.getCurrentWeatherByCoords(lat.value, lon.value, unit.value)

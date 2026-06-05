@@ -11,7 +11,9 @@ export function useForecast(
   const api = useWeatherApi()
 
   return useQuery<ForecastResponse>({
-    queryKey: computed(() => [QUERY_KEYS.FORECAST, city.value, unit.value]),
+    queryKey: computed(() => [
+      QUERY_KEYS.FORECAST, city.value, unit.value, lat?.value ?? null, lon?.value ?? null,
+    ]),
     queryFn: () => {
       if (lat?.value != null && lon?.value != null) {
         return api.getForecastByCoords(lat.value, lon.value, unit.value)
