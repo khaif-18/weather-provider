@@ -18,6 +18,8 @@ bun.lockb
 .env
 .env.*
 !.env.example
+design.md
+claude.md
 
 # ── Build output ──────────────────────────────────
 dist/

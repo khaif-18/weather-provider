@@ -1,26 +1,30 @@
 <template>
-  <BaseCard variant="default" padding="lg" rounded="2xl">
+  <div class="card p-5">
     <div class="flex items-center justify-between mb-5">
-      <h2 class="text-xs font-body font-semibold text-ink-soft uppercase tracking-widest">
-        {{ chartModeLabel }}
-      </h2>
-      <div class="flex bg-canvas rounded-xl p-1 border border-ink-faint/30">
-        <button v-for="mode in chartModes" :key="mode.value" :class="[
-          'px-3 py-1.5 rounded-lg text-xs font-body font-semibold transition-all duration-150',
-          activeMode === mode.value
-            ? 'bg-canvas-pure text-sky shadow-card'
-            : 'text-ink-soft hover:text-ink',
-        ]" @click="activeMode = mode.value">
+      <h2 class="section-label">{{ chartModeLabel }}</h2>
+      <div class="flex bg-canvas rounded-pill p-0.5 gap-0.5">
+        <button
+          v-for="mode in chartModes"
+          :key="mode.value"
+          :class="[
+            'px-3 py-1.5 rounded-pill text-[11px] font-body font-medium transition-all duration-150',
+            activeMode === mode.value
+              ? 'bg-canvas-pure text-ink shadow-btn'
+              : 'text-ink/45 hover:text-ink',
+          ]"
+          @click="activeMode = mode.value"
+        >
           {{ mode.label }}
         </button>
       </div>
     </div>
 
     <v-chart class="w-full" style="height: 200px;" :option="chartOption" autoresize />
-  </BaseCard>
+  </div>
 </template>
 
 <script setup lang="ts">
+import { useDark } from '@vueuse/core'
 import { use } from 'echarts/core'
 import { CanvasRenderer } from 'echarts/renderers'
 import { LineChart, BarChart } from 'echarts/charts'
@@ -30,12 +34,17 @@ import type { ForecastResponse, TemperatureUnit } from '~/types/weather.types'
 
 use([CanvasRenderer, LineChart, BarChart, GridComponent, TooltipComponent])
 
-const props = defineProps<{
-  data?: ForecastResponse | null
-  unit: TemperatureUnit
-}>()
+const props = defineProps<{ data?: ForecastResponse | null; unit: TemperatureUnit }>()
 
-const chartModes: Array<{ value: 'temp' | 'rain' | 'wind', label: string }> = [
+const isDark = useDark()
+
+// Palette adapts to light / dark mode
+const p = computed(() => isDark.value
+  ? { text: '#9490cc', line: '#4040a0', bg: '#16143a', split: '#252548', tipBg: '#1e1c44', tipBorder: '#4040a0', tipText: '#dcdaff' }
+  : { text: '#6b6b6b', line: '#d0d0d0', bg: '#ffffff',  split: '#f5f5f5', tipBg: '#ffffff',  tipBorder: '#d0d0d0', tipText: '#1b1b1b'  }
+)
+
+const chartModes: Array<{ value: 'temp' | 'rain' | 'wind'; label: string }> = [
   { value: 'temp', label: 'Temp' },
   { value: 'rain', label: 'Rain' },
   { value: 'wind', label: 'Wind' },
@@ -48,33 +57,32 @@ const chartModeLabel = computed(() => ({
   wind: 'Wind Speed',
 }[activeMode.value]))
 
-const items = computed(() => props.data?.list.slice(0, 16) ?? [])
+const items  = computed(() => props.data?.list.slice(0, 16) ?? [])
 const labels = computed(() => items.value.map(i => formatTimeFromDtTxt(i.dt_txt)))
 
-// Shared base styling — clean, minimal, no dark bg
 const baseStyle = computed(() => ({
-  textStyle: { fontFamily: 'Plus Jakarta Sans', color: '#8A91A3', fontSize: 10 },
+  textStyle: { fontFamily: 'Inter', color: p.value.text, fontSize: 10 },
   grid: { left: 36, right: 12, top: 12, bottom: 24, containLabel: false },
   tooltip: {
     trigger: 'axis',
-    backgroundColor: '#FFFFFF',
-    borderColor: '#E4E7EF',
+    backgroundColor: p.value.tipBg,
+    borderColor: p.value.tipBorder,
     borderWidth: 1,
-    textStyle: { color: '#1A1F2E', fontFamily: 'Plus Jakarta Sans', fontSize: 12 },
-    extraCssText: 'box-shadow: 0 4px 16px rgba(26,31,46,0.1); border-radius: 12px;',
+    textStyle: { color: p.value.tipText, fontFamily: 'Inter', fontSize: 12 },
+    extraCssText: `box-shadow: var(--shadow-card-md); border-radius: 11px;`,
   },
   xAxis: {
     type: 'category',
     data: labels.value,
-    axisLine: { lineStyle: { color: '#E4E7EF' } },
-    axisLabel: { color: '#8A91A3', fontSize: 10 },
+    axisLine: { lineStyle: { color: p.value.line } },
+    axisLabel: { color: p.value.text, fontSize: 10 },
     splitLine: { show: false },
   },
   yAxis: {
     type: 'value',
     axisLine: { show: false },
-    axisLabel: { color: '#8A91A3', fontSize: 10 },
-    splitLine: { lineStyle: { color: '#F0F2F6', width: 1 } },
+    axisLabel: { color: p.value.text, fontSize: 10 },
+    splitLine: { lineStyle: { color: p.value.split, width: 1 } },
   },
 }))
 
@@ -89,16 +97,11 @@ const chartOption = computed(() => {
         smooth: true,
         symbol: 'circle',
         symbolSize: 5,
-        lineStyle: { color: '#4A90D9', width: 2 },
-        itemStyle: { color: '#4A90D9', borderColor: '#fff', borderWidth: 2 },
+        lineStyle: { color: '#2b7fff', width: 2 },
+        itemStyle: { color: '#2b7fff', borderColor: p.value.bg, borderWidth: 2 },
         areaStyle: {
-          color: {
-            type: 'linear', x: 0, y: 0, x2: 0, y2: 1,
-            colorStops: [
-              { offset: 0, color: 'rgba(74,144,217,0.15)' },
-              { offset: 1, color: 'rgba(74,144,217,0)' },
-            ],
-          },
+          color: { type: 'linear', x: 0, y: 0, x2: 0, y2: 1,
+            colorStops: [{ offset: 0, color: 'rgba(43,127,255,0.12)' }, { offset: 1, color: 'rgba(43,127,255,0)' }] },
         },
       }],
     }
@@ -113,13 +116,8 @@ const chartOption = computed(() => {
         data: items.value.map(i => Math.round(i.pop * 100)),
         barMaxWidth: 14,
         itemStyle: {
-          color: {
-            type: 'linear', x: 0, y: 0, x2: 0, y2: 1,
-            colorStops: [
-              { offset: 0, color: '#5B8DB8' },
-              { offset: 1, color: 'rgba(91,141,184,0.3)' },
-            ],
-          },
+          color: { type: 'linear', x: 0, y: 0, x2: 0, y2: 1,
+            colorStops: [{ offset: 0, color: '#5b8db8' }, { offset: 1, color: 'rgba(91,141,184,0.3)' }] },
           borderRadius: [4, 4, 0, 0],
         },
       }],
@@ -133,16 +131,11 @@ const chartOption = computed(() => {
       type: 'line',
       data: items.value.map(i => +(i.wind.speed).toFixed(1)),
       smooth: true,
-      lineStyle: { color: '#63B8A0', width: 2 },
-      itemStyle: { color: '#63B8A0', borderColor: '#fff', borderWidth: 2 },
+      lineStyle: { color: '#63b8a0', width: 2 },
+      itemStyle: { color: '#63b8a0', borderColor: p.value.bg, borderWidth: 2 },
       areaStyle: {
-        color: {
-          type: 'linear', x: 0, y: 0, x2: 0, y2: 1,
-          colorStops: [
-            { offset: 0, color: 'rgba(99,184,160,0.15)' },
-            { offset: 1, color: 'rgba(99,184,160,0)' },
-          ],
-        },
+        color: { type: 'linear', x: 0, y: 0, x2: 0, y2: 1,
+          colorStops: [{ offset: 0, color: 'rgba(99,184,160,0.12)' }, { offset: 1, color: 'rgba(99,184,160,0)' }] },
       },
     }],
   }

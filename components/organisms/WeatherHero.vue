@@ -1,81 +1,103 @@
 <template>
-  <div :class="['relative overflow-hidden rounded-3xl transition-all duration-700', meta.heroBg]">
+  <div class="card p-6 md:p-8 animate-fade-up">
 
-    <!-- Subtle dot-grid texture overlay -->
-    <div class="absolute inset-0 dot-grid opacity-[0.04]" />
+    <!-- Location + date -->
+    <div class="flex items-center justify-between mb-5">
+      <div class="flex items-center gap-2">
+        <MapPin :size="14" :stroke-width="2" class="text-ink/40 shrink-0" />
+        <span class="font-body font-semibold text-sm text-ink">{{ cityName }}</span>
+        <span
+          v-if="country"
+          class="text-[11px] font-medium text-ink/50 bg-canvas px-2 rounded-pill leading-none"
+          style="padding-top:3px;padding-bottom:3px"
+        >{{ country }}</span>
+      </div>
+      <span class="text-xs text-ink/40 font-body">{{ currentDate }}</span>
+    </div>
 
-    <!-- Decorative large circle blur -->
-    <div
-      :class="['absolute -top-16 -right-16 w-72 h-72 rounded-full blur-3xl opacity-30 transition-colors duration-700', conditionCircle]" />
+    <!-- Temp + condition -->
+    <div class="flex items-start justify-between gap-4">
+      <div class="flex flex-col gap-3">
 
-    <div class="relative z-10 p-7 md:p-10">
-      <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-8">
-
-        <!-- Left: Location + Temp -->
-        <div class="flex flex-col gap-5 animate-fade-up">
-          <!-- Location pill -->
-          <div class="flex items-center gap-3">
-            <div
-              class="flex items-center gap-1.5 bg-white/60 backdrop-blur-sm rounded-full px-3 py-1.5 border border-white/80 shadow-card">
-              <span class="text-xs">📍</span>
-              <span class="font-body font-semibold text-sm text-ink">{{ cityName }}</span>
-              <span v-if="country" class="text-ink-soft text-xs font-body">{{ country }}</span>
-            </div>
-            <BaseBadge variant="neutral" size="xs">{{ currentDate }}</BaseBadge>
-          </div>
-
-          <!-- Giant temperature -->
-          <div class="flex items-start">
-            <span class="temp-hero text-ink">{{ Math.round(temp) }}</span>
-            <div class="flex flex-col ml-3 mt-5">
-              <span class="text-3xl font-display font-semibold text-ink/60">°{{ unitSymbol }}</span>
-            </div>
-          </div>
-
-          <!-- Condition + feels like -->
-          <div class="flex flex-col gap-1">
-            <p class="font-display italic text-lg text-ink-mid">{{ description }}</p>
-            <p class="text-sm text-ink-soft font-body">
-              Feels like
-              <span class="font-semibold text-ink-mid">{{ formatTemp(feelsLike, unit) }}</span>
-              · High <span class="text-sun font-semibold">{{ formatTemp(tempMax, unit) }}</span>
-              · Low <span class="text-sky font-semibold">{{ formatTemp(tempMin, unit) }}</span>
-            </p>
-          </div>
+        <div class="flex items-start gap-1">
+          <span
+            class="font-body font-semibold text-ink leading-none tracking-tight"
+            style="font-size:clamp(4.5rem,11vw,7rem);letter-spacing:-0.04em"
+          >{{ Math.round(temp) }}</span>
+          <span class="text-xl md:text-2xl font-medium text-ink/40 mt-3">°{{ unitSymbol }}</span>
         </div>
 
-        <!-- Right: Weather icon -->
-        <div class="flex flex-col items-center gap-4 animate-scale-in">
-          <img :src="iconUrl" :alt="description" class="w-32 h-32 md:w-40 md:h-40 object-contain animate-float"
-            style="filter: drop-shadow(0 8px 24px rgba(74,144,217,0.2))" />
+        <p class="font-cursive font-bold text-xl md:text-2xl text-dusk-blue leading-tight">
+          {{ description }}
+        </p>
+
+        <div class="flex flex-wrap gap-x-3 gap-y-1 text-sm font-body">
+          <span class="text-ink/50">Feels like <span class="text-ink font-medium">{{ formatTemp(feelsLike, unit) }}</span></span>
+          <span class="text-ink/30">·</span>
+          <span class="text-ink/50">H <span class="font-semibold" style="color:#c27c3a">{{ formatTemp(tempMax, unit) }}</span></span>
+          <span class="text-ink/30">·</span>
+          <span class="text-ink/50">L <span class="font-semibold text-dusk-blue">{{ formatTemp(tempMin, unit) }}</span></span>
+        </div>
+
+        <!-- Condition chips -->
+        <div class="flex flex-wrap gap-2 mt-1">
+          <span v-if="data.wind.speed > 5" class="pill bg-canvas border border-ink-faint/20 text-[11px] text-ink/60">
+            <Wind :size="10" :stroke-width="2" class="shrink-0" />
+            {{ formatWind(data.wind.speed, unit) }} {{ windDegToCompass(data.wind.deg) }}
+          </span>
+          <span v-if="data.main.humidity > 70" class="pill bg-canvas border border-ink-faint/20 text-[11px] text-ink/60">
+            <Droplets :size="10" :stroke-width="2" class="shrink-0" />
+            {{ data.main.humidity }}% humidity
+          </span>
+          <span v-if="data.visibility < 5000" class="pill bg-canvas border border-ink-faint/20 text-[11px] text-ink/60">
+            <Eye :size="10" :stroke-width="2" class="shrink-0" />
+            Low visibility
+          </span>
         </div>
       </div>
 
-      <!-- Sunrise / Sunset strip -->
-      <div class="mt-8 pt-5 border-t border-ink/8">
-        <div class="flex items-center gap-3">
-          <div class="flex items-center gap-1.5">
-            <span class="text-sm">Sunrise:</span>
-            <span class="text-xs font-mono text-ink-mid font-medium">{{ sunriseTime }}</span>
-          </div>
+      <img
+        :src="iconUrl" :alt="description"
+        class="w-24 h-24 md:w-32 md:h-32 object-contain animate-float shrink-0"
+        style="filter:drop-shadow(0 8px 24px rgba(66,97,136,0.25))"
+      />
+    </div>
 
-          <!-- Day progress bar -->
-          <div class="flex-1 flex items-center gap-1.5">
-            <div class="flex-1 h-1 bg-ink/10 rounded-full overflow-hidden">
-              <div class="h-full bg-gradient-to-r from-sun/70 to-sky rounded-full transition-all duration-1000"
-                :style="{ width: `${dayProgress}%` }" />
-            </div>
-            <!-- Sun position indicator -->
-            <span class="text-base transition-all duration-1000"
-              :style="{ marginLeft: `calc(${dayProgress}% - 12px)`, position: 'relative' }">
-              {{ dayProgress > 50 ? '🌇' : '☀️' }}
-            </span>
-          </div>
+    <!-- Sunrise / Sunset -->
+    <div class="mt-6 pt-5 border-t border-ink-faint/20">
+      <div class="flex items-center gap-3">
+        <div class="flex items-center gap-1.5 shrink-0">
+          <Sunrise :size="14" :stroke-width="1.75" class="text-ink/35" />
+          <span class="text-xs font-mono text-ink/50">{{ sunriseTime }}</span>
+        </div>
+        <div class="flex-1 relative h-1.5 bg-ink-faint/20 rounded-full overflow-hidden">
+          <div
+            class="absolute left-0 top-0 h-full rounded-full transition-all duration-1000"
+            style="background:linear-gradient(90deg,#f5a623,#7ab3e8)"
+            :style="{ width: `${dayProgress}%` }"
+          />
+        </div>
+        <div class="flex items-center gap-1.5 shrink-0">
+          <span class="text-xs font-mono text-ink/50">{{ sunsetTime }}</span>
+          <Sunset :size="14" :stroke-width="1.75" class="text-ink/35" />
+        </div>
+      </div>
 
-          <div class="flex items-center gap-1.5">
-            <span class="text-xs font-mono text-ink-mid font-medium">{{ sunsetTime }}</span>
-            <span class="text-sm">🌇</span>
-          </div>
+      <!-- Refresh footer -->
+      <div class="flex items-center justify-between mt-3">
+        <p class="text-[10px] text-ink/30 font-body">{{ dayProgressLabel }}</p>
+        <div class="flex items-center gap-2">
+          <span class="text-[10px] text-ink/30 font-body">
+            {{ minutesAgo !== null ? (minutesAgo === 0 ? 'Just updated' : `Updated ${minutesAgo}m ago`) : '' }}
+          </span>
+          <button
+            class="flex items-center gap-1 text-[11px] text-ink/40 hover:text-signal-blue transition-colors font-body font-medium disabled:opacity-50"
+            :disabled="refetching"
+            @click="$emit('refresh')"
+          >
+            <RefreshCw :size="11" :stroke-width="2" :class="refetching ? 'animate-spin' : ''" />
+            <span>{{ refetching ? 'Updating…' : 'Refresh' }}</span>
+          </button>
         </div>
       </div>
     </div>
@@ -83,50 +105,46 @@
 </template>
 
 <script setup lang="ts">
+import { MapPin, Wind, Droplets, Eye, Sunrise, Sunset, RefreshCw } from 'lucide-vue-next'
 import type { CurrentWeatherResponse, TemperatureUnit } from '~/types/weather.types'
 
 const props = defineProps<{
   data: CurrentWeatherResponse
   unit: TemperatureUnit
+  minutesAgo?: number | null
+  refetching?: boolean
 }>()
 
-const unitSymbol = computed(() => props.unit === 'metric' ? 'C' : 'F')
-const cityName = computed(() => props.data.name)
-const country = computed(() => props.data.sys.country)
-const temp = computed(() => props.data.main.temp)
-const feelsLike = computed(() => props.data.main.feels_like)
-const tempMax = computed(() => props.data.main.temp_max)
-const tempMin = computed(() => props.data.main.temp_min)
-const description = computed(() => capitalize(props.data.weather[0]?.description ?? ''))
-const icon = computed(() => props.data.weather[0]?.icon ?? '01d')
-const conditionCode = computed(() => props.data.weather[0]?.id ?? 800)
-const meta = computed(() => getConditionMeta(conditionCode.value))
-const iconUrl = computed(() => getWeatherIconUrl(icon.value, '4x'))
+defineEmits<{ refresh: [] }>()
 
-// Decorative circle color based on condition
-const conditionCircle = computed(() => ({
-  thunderstorm: 'bg-storm',
-  drizzle: 'bg-rain',
-  rain: 'bg-rain',
-  snow: 'bg-snow',
-  atmosphere: 'bg-ink-faint',
-  clear: 'bg-sun',
-  clouds: 'bg-sky-light',
-  unknown: 'bg-sky',
-}[meta.value.group]))
+const unitSymbol  = computed(() => props.unit === 'metric' ? 'C' : 'F')
+const cityName    = computed(() => props.data.name)
+const country     = computed(() => props.data.sys.country)
+const temp        = computed(() => props.data.main.temp)
+const feelsLike   = computed(() => props.data.main.feels_like)
+const tempMax     = computed(() => props.data.main.temp_max)
+const tempMin     = computed(() => props.data.main.temp_min)
+const description = computed(() => capitalize(props.data.weather[0]?.description ?? ''))
+const iconUrl     = computed(() => getWeatherIconUrl(props.data.weather[0]?.icon ?? '01d', '4x'))
 
 const currentDate = computed(() =>
   new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })
 )
 
 const sunriseTime = computed(() => formatTime(props.data.sys.sunrise, props.data.timezone))
-const sunsetTime = computed(() => formatTime(props.data.sys.sunset, props.data.timezone))
+const sunsetTime  = computed(() => formatTime(props.data.sys.sunset, props.data.timezone))
 
 const dayProgress = computed(() => {
   const now = Date.now() / 1000
   const { sunrise, sunset } = props.data.sys
   if (now < sunrise) return 0
-  if (now > sunset) return 100
+  if (now > sunset)  return 100
   return Math.round(((now - sunrise) / (sunset - sunrise)) * 100)
+})
+
+const dayProgressLabel = computed(() => {
+  if (dayProgress.value === 0) return 'Before sunrise'
+  if (dayProgress.value === 100) return 'After sunset'
+  return `${100 - dayProgress.value}% of daylight remaining`
 })
 </script>

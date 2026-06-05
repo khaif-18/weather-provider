@@ -7,6 +7,7 @@ import type {
   ForecastResponse,
   GeoLocation,
   TemperatureUnit,
+  AirQualityResponse,
 } from '~/types/weather.types'
 
 function buildParams(apiKey: string, params: Record<string, string | number>): string {
@@ -60,6 +61,12 @@ export function useWeatherApi() {
     reverseGeocode(lat: number, lon: number) {
       const params = buildParams(apiKey, { lat, lon, limit: 1 })
       return $fetch<GeoLocation[]>(`${geoUrl}/reverse?${params}`)
+    },
+
+    /** Air quality by coordinates (free tier) */
+    getAirQuality(lat: number, lon: number) {
+      const params = buildParams(apiKey, { lat, lon })
+      return $fetch<AirQualityResponse>(`${baseUrl}/air_pollution?${params}`)
     },
   }
 }

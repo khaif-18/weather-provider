@@ -5,6 +5,7 @@ export default defineNuxtConfig({
   modules: [
     '@nuxtjs/tailwindcss',
     '@pinia/nuxt',
+    '@vueuse/motion/nuxt',
   ],
 
   ssr: false,
@@ -12,7 +13,6 @@ export default defineNuxtConfig({
   nitro: {
     preset: 'static',
     output: {
-      // Paksa output ke dist/ agar konsisten lokal dan CI
       dir: 'dist',
       publicDir: 'dist',
     },
@@ -26,17 +26,10 @@ export default defineNuxtConfig({
   ],
 
   imports: {
-    dirs: [
-      'composables/**',
-      'stores/**',
-      'utils/**',
-      'services/**',
-    ],
+    dirs: ['composables/**', 'stores/**', 'utils/**', 'services/**'],
   },
 
-  pinia: {
-    storesDirs: ['./stores/**'],
-  },
+  pinia: { storesDirs: ['./stores/**'] },
 
   runtimeConfig: {
     public: {
@@ -52,14 +45,12 @@ export default defineNuxtConfig({
     'leaflet/dist/leaflet.css',
   ],
 
-  typescript: {
-    strict: true,
-    typeCheck: false,
-  },
+  typescript: { strict: true, typeCheck: false },
 
   vite: {
     optimizeDeps: {
       include: ['echarts', 'vue-echarts'],
     },
   },
+
 })

@@ -1,54 +1,40 @@
 <script setup lang="ts">
-const router = useRouter()
+import { Wrench, Sun, CloudRain, CloudLightning, Snowflake, Cloud } from 'lucide-vue-next'
 
 useSeoMeta({
-  title: '404 — Page Not Found · Aether',
-  description: 'The page you are looking for does not exist.',
+  title: 'Maintenance · Kaether',
+  description: 'Kaether is currently under maintenance.',
 })
 </script>
 
 <template>
   <WeatherLayout>
     <div class="flex flex-col items-center justify-center min-h-[70vh] text-center px-4">
-      <!-- Big 404 number -->
+
       <div class="relative mb-8 select-none">
-        <span
-          class="font-display font-bold text-[clamp(6rem,20vw,12rem)] leading-none text-ink-faint/30 tracking-tighter">
-          404
+        <span class="font-body font-bold text-[clamp(6rem,20vw,12rem)] leading-none text-white/10 tracking-tighter">
+          Maint.
         </span>
-        <!-- Weather icon floating over the number -->
-        <span class="absolute inset-0 flex items-center justify-center text-[clamp(3rem,8vw,5rem)] animate-float">
-          🌫️
-        </span>
+        <div class="absolute inset-0 flex items-center justify-center">
+          <Wrench :stroke-width="1" class="text-white/40 animate-float" style="width:clamp(3rem,8vw,5rem);height:clamp(3rem,8vw,5rem)" />
+        </div>
       </div>
 
-      <!-- Message -->
       <div class="flex flex-col gap-3 mb-8 max-w-sm">
-        <h1 class="font-display font-bold text-2xl md:text-3xl text-ink">
-          Page Not Found
-        </h1>
-        <p class="font-body text-ink-soft text-sm md:text-base leading-relaxed">
-          Looks like this page drifted off into the clouds. Let's get you back to clear skies.
+        <h1 class="font-body font-bold text-2xl md:text-3xl text-white">Under Maintenance</h1>
+        <p class="font-body text-white/60 text-sm md:text-base leading-relaxed">
+          We're making improvements. Check back shortly.
         </p>
       </div>
 
-      <!-- Actions -->
-      <div class="flex flex-col sm:flex-row items-center gap-3">
-        <BaseButton variant="primary" size="lg" @click="navigateTo('/')">
-          Back to Home
-        </BaseButton>
-        <BaseButton variant="secondary" size="lg" @click="router.back()">
-          Go Back
-        </BaseButton>
-      </div>
+      <button class="btn-ghost" @click="navigateTo('/')">Back to Home</button>
 
-      <!-- Decorative weather strip -->
-      <div class="flex items-center gap-6 mt-16 text-2xl text-ink-faint/40 select-none">
-        <span class="animate-float" style="animation-delay: 0s">☀️</span>
-        <span class="animate-float" style="animation-delay: 0.5s">⛅</span>
-        <span class="animate-float" style="animation-delay: 1s">🌧️</span>
-        <span class="animate-float" style="animation-delay: 1.5s">❄️</span>
-        <span class="animate-float" style="animation-delay: 2s">⛈️</span>
+      <div class="flex items-center gap-8 mt-16 text-white/20 select-none">
+        <Sun :size="28" :stroke-width="1" class="animate-float" style="animation-delay:0s" />
+        <Cloud :size="28" :stroke-width="1" class="animate-float" style="animation-delay:0.4s" />
+        <CloudRain :size="28" :stroke-width="1" class="animate-float" style="animation-delay:0.8s" />
+        <Snowflake :size="28" :stroke-width="1" class="animate-float" style="animation-delay:1.2s" />
+        <CloudLightning :size="28" :stroke-width="1" class="animate-float" style="animation-delay:1.6s" />
       </div>
     </div>
   </WeatherLayout>

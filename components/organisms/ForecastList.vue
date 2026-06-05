@@ -1,21 +1,30 @@
 <template>
-  <BaseCard variant="default" padding="lg" rounded="2xl">
-    <h2 class="text-xs font-body font-semibold text-ink-soft uppercase tracking-widest mb-4">
-      7-Day Forecast
-    </h2>
+  <div class="card p-5">
+    <h2 class="section-label mb-4">7-Day Forecast</h2>
 
     <!-- Skeleton -->
-    <div v-if="loading" class="flex gap-1 overflow-x-auto no-scrollbar pb-1">
-      <div v-for="i in 7" :key="i" class="skeleton w-16 h-32 rounded-2xl shrink-0" />
+    <div v-if="loading" class="flex flex-col gap-2">
+      <div v-for="i in 7" :key="i" class="skeleton-card h-10 rounded-[8px]" />
     </div>
 
-    <!-- Data -->
-    <div v-else-if="dailyForecasts.length" class="flex gap-1 overflow-x-auto no-scrollbar pb-1 stagger">
-      <ForecastCard v-for="(day, index) in dailyForecasts" :key="day.date" :day-short="day.dayShort" :icon="day.icon"
-        :condition="day.condition" :temp-max="day.tempMax" :temp-min="day.tempMin" :pop="day.pop" :unit="unit"
-        :is-today="index === 0" class="shrink-0 flex-1 min-w-[90px]" />
+    <!-- Data — vertical rows -->
+    <div v-else-if="dailyForecasts.length" class="flex flex-col stagger">
+      <ForecastCard
+        v-for="(day, index) in dailyForecasts"
+        :key="day.date"
+        :day-short="day.dayShort"
+        :icon="day.icon"
+        :condition="day.condition"
+        :temp-max="day.tempMax"
+        :temp-min="day.tempMin"
+        :pop="day.pop"
+        :unit="unit"
+        :is-today="index === 0"
+        :temp-range-min="globalTempMin"
+        :temp-range-max="globalTempMax"
+      />
     </div>
-  </BaseCard>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -55,4 +64,12 @@ const dailyForecasts = computed<DailyForecast[]>(() => {
     }
   })
 })
+
+// Global min/max for relative temperature bar widths
+const globalTempMin = computed(() =>
+  dailyForecasts.value.length ? Math.min(...dailyForecasts.value.map(d => d.tempMin)) : 0
+)
+const globalTempMax = computed(() =>
+  dailyForecasts.value.length ? Math.max(...dailyForecasts.value.map(d => d.tempMax)) : 40
+)
 </script>
