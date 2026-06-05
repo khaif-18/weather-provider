@@ -64,11 +64,29 @@
     text-rendering: optimizeLegibility;
   }
 
+  /* Solid root colour so mobile overscroll/rubber-band never flashes white */
+  html {
+    background-color: #b29fc8;
+  }
+  html.dark {
+    background-color: #1a0533;
+  }
+
   body {
     @apply font-body text-ink;
-    background: var(--sky-bg);
-    background-attachment: fixed;
     min-height: 100dvh;
+    position: relative;
+  }
+
+  /* Fixed gradient layer behind all content.
+     Avoids `background-attachment: fixed`, which janks on mobile
+     (background appears pinned while scrolling, then re-fills on release). */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    background: var(--sky-bg);
     transition: background 0.5s ease;
   }
 

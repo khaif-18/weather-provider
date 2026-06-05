@@ -1,23 +1,28 @@
 <template>
   <header class="relative z-40 w-full">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="flex items-center gap-3 h-16">
+      <!--
+        Responsive header.
+        Mobile  (< sm): two rows — [wordmark + controls] then [search full width].
+        Desktop (≥ sm): single row — [wordmark] [search] … [controls].
+        Achieved via flex-wrap + order: the search has `w-full` to force a wrap
+        on mobile and `sm:w-auto sm:flex-1` to sit inline on desktop.
+      -->
+      <div class="flex flex-wrap items-center gap-x-3 gap-y-2 py-3 sm:h-16 sm:flex-nowrap sm:py-0">
 
-        <NuxtLink to="/" class="shrink-0 group">
-          <span class="font-cursive font-bold text-[30px] text-white leading-none tracking-tight
+        <!-- Wordmark -->
+        <NuxtLink to="/" class="shrink-0 group order-1">
+          <span class="font-cursive font-bold text-[28px] sm:text-[30px] text-white leading-none tracking-tight
                        group-hover:opacity-80 transition-opacity">
             Kaether
           </span>
         </NuxtLink>
 
-        <div class="flex-1 max-w-xs">
-          <SearchBar @select="handleCitySelect" @search="handleSearch" />
-        </div>
-
-        <div class="flex items-center gap-2 shrink-0">
+        <!-- Controls -->
+        <div class="flex items-center gap-1.5 sm:gap-2 shrink-0 ml-auto order-2 sm:order-3">
 
           <!-- Geolocation -->
-          <button class="btn-ghost py-2 px-3 sm:px-4" :disabled="locating" @click="handleGeolocate">
+          <button class="btn-ghost py-2 px-2.5 sm:px-4" :disabled="locating" @click="handleGeolocate">
             <LocateFixed v-if="!locating" :size="15" :stroke-width="1.75" />
             <LoaderCircle v-else :size="15" :stroke-width="1.75" class="animate-spin" />
             <span class="hidden sm:inline">Locate</span>
@@ -26,12 +31,12 @@
           <!-- °C / °F -->
           <div class="flex rounded-pill border border-white/60 overflow-hidden text-sm font-body font-medium">
             <button
-              :class="['px-3 py-1.5 leading-none transition-colors',
+              :class="['px-2.5 sm:px-3 py-1.5 leading-none transition-colors',
                 appStore.unit === 'metric' ? 'bg-white text-ink' : 'text-white/75 hover:text-white hover:bg-white/10']"
               @click="appStore.setUnit('metric')"
             >°C</button>
             <button
-              :class="['px-3 py-1.5 leading-none transition-colors',
+              :class="['px-2.5 sm:px-3 py-1.5 leading-none transition-colors',
                 appStore.unit === 'imperial' ? 'bg-white text-ink' : 'text-white/75 hover:text-white hover:bg-white/10']"
               @click="appStore.setUnit('imperial')"
             >°F</button>
@@ -39,7 +44,7 @@
 
           <!-- Dark mode toggle -->
           <button
-            class="btn-ghost py-2 px-3"
+            class="btn-ghost py-2 px-2.5"
             :title="isDark ? 'Light mode' : 'Dark mode'"
             @click="toggleDark()"
           >
@@ -48,7 +53,7 @@
 
           <!-- Save/unsave city -->
           <button
-            :class="['btn-ghost py-2 px-3', appStore.isCurrentCitySaved ? 'bg-white/20' : '']"
+            :class="['btn-ghost py-2 px-2.5', appStore.isCurrentCitySaved ? 'bg-white/20' : '']"
             :title="appStore.isCurrentCitySaved ? 'Remove from saved' : 'Save city'"
             @click="toggleSave"
           >
@@ -57,6 +62,11 @@
               :size="15" :stroke-width="1.75"
             />
           </button>
+        </div>
+
+        <!-- Search: full-width second row on mobile, inline on desktop -->
+        <div class="w-full order-3 sm:order-2 sm:w-auto sm:flex-1 sm:max-w-xs">
+          <SearchBar @select="handleCitySelect" @search="handleSearch" />
         </div>
       </div>
     </div>
