@@ -1,7 +1,3 @@
-<template>
-  <span :class="classes"><slot /></span>
-</template>
-
 <script setup lang="ts">
 type BadgeVariant = 'sky' | 'sun' | 'rain' | 'snow' | 'success' | 'danger' | 'neutral'
 
@@ -40,3 +36,7 @@ const classes = computed(() => [
   sizeClasses[props.size],
 ])
 </script>
+
+<template>
+  <span :class="classes"><slot></slot></span>
+</template>

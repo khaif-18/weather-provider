@@ -1,3 +1,35 @@
+<script setup lang="ts">
+import { useQueries } from '@tanstack/vue-query'
+import type { GeoLocation } from '~/types/weather.types'
+
+const appStore = useAppStore()
+const api      = useWeatherApi()
+
+// Parallel queries for mini temperature of each saved city
+const results = useQueries({
+  queries: computed(() =>
+    appStore.savedCities.map(city => ({
+      queryKey: ['saved-temp', city.name, city.lat, city.lon, appStore.unit] as const,
+      queryFn:  () => city.lat && city.lon
+        ? api.getCurrentWeatherByCoords(city.lat, city.lon, appStore.unit)
+        : api.getCurrentWeatherByCity(city.name, appStore.unit),
+      staleTime: STALE_TIME.WEATHER,
+      retry: 1,
+    }))
+  ),
+})
+
+const cityTemps = computed(() =>
+  results.value.map(r =>
+    r.isSuccess && r.data ? `${Math.round(r.data.main.temp)}°` : null
+  )
+)
+
+function selectCity(city: GeoLocation) {
+  appStore.setCity(city.name, city.lat, city.lon)
+}
+</script>
+
 <template>
   <div v-if="appStore.savedCities.length" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-3">
     <div class="flex items-center gap-2 overflow-x-auto no-scrollbar">
@@ -33,35 +65,3 @@
     </div>
   </div>
 </template>
-
-<script setup lang="ts">
-import { useQueries } from '@tanstack/vue-query'
-import type { GeoLocation } from '~/types/weather.types'
-
-const appStore = useAppStore()
-const api      = useWeatherApi()
-
-// Parallel queries for mini temperature of each saved city
-const results = useQueries({
-  queries: computed(() =>
-    appStore.savedCities.map(city => ({
-      queryKey: ['saved-temp', city.name, city.lat, city.lon, appStore.unit] as const,
-      queryFn:  () => city.lat && city.lon
-        ? api.getCurrentWeatherByCoords(city.lat, city.lon, appStore.unit)
-        : api.getCurrentWeatherByCity(city.name, appStore.unit),
-      staleTime: STALE_TIME.WEATHER,
-      retry: 1,
-    }))
-  ),
-})
-
-const cityTemps = computed(() =>
-  results.value.map(r =>
-    r.isSuccess && r.data ? `${Math.round(r.data.main.temp)}°` : null
-  )
-)
-
-function selectCity(city: GeoLocation) {
-  appStore.setCity(city.name, city.lat, city.lon)
-}
-</script>

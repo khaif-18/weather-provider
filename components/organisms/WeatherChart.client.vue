@@ -1,28 +1,3 @@
-<template>
-  <div class="card p-5">
-    <div class="flex items-center justify-between mb-5">
-      <h2 class="section-label">{{ chartModeLabel }}</h2>
-      <div class="flex bg-canvas rounded-pill p-0.5 gap-0.5">
-        <button
-          v-for="mode in chartModes"
-          :key="mode.value"
-          :class="[
-            'px-3 py-1.5 rounded-pill text-[11px] font-body font-medium transition-all duration-150',
-            activeMode === mode.value
-              ? 'bg-canvas-pure text-ink shadow-btn'
-              : 'text-ink/45 hover:text-ink',
-          ]"
-          @click="activeMode = mode.value"
-        >
-          {{ mode.label }}
-        </button>
-      </div>
-    </div>
-
-    <v-chart class="w-full" style="height: 200px;" :option="chartOption" autoresize />
-  </div>
-</template>
-
 <script setup lang="ts">
 import { useDark } from '@vueuse/core'
 import { use } from 'echarts/core'
@@ -141,3 +116,35 @@ const chartOption = computed(() => {
   }
 })
 </script>
+
+<template>
+  <div class="card p-5">
+    <div class="flex items-center justify-between mb-5">
+      <h2 class="section-label">
+        {{ chartModeLabel }}
+      </h2>
+      <div class="flex bg-canvas rounded-pill p-0.5 gap-0.5">
+        <button
+          v-for="mode in chartModes"
+          :key="mode.value"
+          :class="[
+            'px-3 py-1.5 rounded-pill text-[11px] font-body font-medium transition-all duration-150',
+            activeMode === mode.value
+              ? 'bg-canvas-pure text-ink shadow-btn'
+              : 'text-ink/45 hover:text-ink',
+          ]"
+          @click="activeMode = mode.value"
+        >
+          {{ mode.label }}
+        </button>
+      </div>
+    </div>
+
+    <VChart
+      class="w-full"
+      style="height: 200px;"
+      :option="chartOption"
+      autoresize
+    />
+  </div>
+</template>

@@ -1,4 +1,4 @@
-import type { TemperatureUnit } from '~/types/weather.types'
+import type { TemperatureUnit, PollenCurrent, MarineResponse } from '~/types/weather.types'
 
 /** Dew point in °C via the Magnus formula. */
 export function dewPointC(tempC: number, humidity: number): number {
@@ -96,4 +96,82 @@ export function getMoonInfo(now = Date.now()): MoonInfo {
   ]
   const name = phases.find(([edge]) => fraction < edge)?.[1] ?? 'New Moon'
   return { fraction, illumination, name }
+}
+
+// ─── Pollen (Open-Meteo, grains/m³) ───────────────────────────────
+
+export interface PollenSummary {
+  available: boolean
+  level: string
+  dominant: string
+  value: number
+  pct: number      // 0..100 for the intensity bar
+  color: string
+}
+
+export function summarizePollen(c?: PollenCurrent): PollenSummary {
+  const types: Array<[keyof PollenCurrent, string]> = [
+    ['grass_pollen', 'Grass'],
+    ['birch_pollen', 'Birch'],
+    ['alder_pollen', 'Alder'],
+    ['ragweed_pollen', 'Ragweed'],
+    ['mugwort_pollen', 'Mugwort'],
+    ['olive_pollen', 'Olive'],
+  ]
+
+  let max = -1
+  let dominant = ''
+  for (const [key, label] of types) {
+    const v = c?.[key]
+    if (typeof v === 'number' && v > max) { max = v; dominant = label }
+  }
+
+  if (max < 0) return { available: false, level: '—', dominant: '', value: 0, pct: 0, color: '#8a91a3' }
+
+  let level: string
+  let color: string
+  if (max < 1)        { level = 'None';      color = '#00b050' }
+  else if (max < 20)  { level = 'Low';       color = '#92d050' }
+  else if (max < 50)  { level = 'Moderate';  color = '#ffc000' }
+  else if (max < 100) { level = 'High';      color = '#ff6b35' }
+  else                { level = 'Very High'; color = '#e53e3e' }
+
+  return { available: true, level, dominant, value: max, pct: Math.min(100, (max / 120) * 100), color }
+}
+
+// ─── Tide / marine (Open-Meteo sea_level_height_msl) ──────────────
+
+export interface TideInfo {
+  available: boolean
+  level: number                          // metres relative to MSL
+  trend: 'rising' | 'falling' | 'steady'
+  waveHeight: number | null
+}
+
+export function summarizeMarine(res?: MarineResponse): TideInfo {
+  const cur = res?.current
+  if (!cur || typeof cur.sea_level_height_msl !== 'number') {
+    return { available: false, level: 0, trend: 'steady', waveHeight: null }
+  }
+
+  let trend: TideInfo['trend'] = 'steady'
+  const h = res?.hourly
+  if (h?.time && h.sea_level_height_msl) {
+    const nowHour = cur.time.slice(0, 13)
+    let idx = h.time.findIndex(t => t.slice(0, 13) === nowHour)
+    if (idx < 0) idx = 0
+    const a = h.sea_level_height_msl[idx]
+    const b = h.sea_level_height_msl[idx + 1]
+    if (typeof a === 'number' && typeof b === 'number') {
+      const d = b - a
+      trend = Math.abs(d) < 0.02 ? 'steady' : d > 0 ? 'rising' : 'falling'
+    }
+  }
+
+  return {
+    available: true,
+    level: cur.sea_level_height_msl,
+    trend,
+    waveHeight: typeof cur.wave_height === 'number' ? cur.wave_height : null,
+  }
 }

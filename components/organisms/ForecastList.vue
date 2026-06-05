@@ -1,32 +1,3 @@
-<template>
-  <div class="card p-5">
-    <h2 class="section-label mb-4">7-Day Forecast</h2>
-
-    <!-- Skeleton -->
-    <div v-if="loading" class="flex flex-col gap-2">
-      <div v-for="i in 7" :key="i" class="skeleton-card h-10 rounded-[8px]" />
-    </div>
-
-    <!-- Data — vertical rows -->
-    <div v-else-if="dailyForecasts.length" class="flex flex-col stagger">
-      <ForecastCard
-        v-for="(day, index) in dailyForecasts"
-        :key="day.date"
-        :day-short="day.dayShort"
-        :icon="day.icon"
-        :condition="day.condition"
-        :temp-max="day.tempMax"
-        :temp-min="day.tempMin"
-        :pop="day.pop"
-        :unit="unit"
-        :is-today="index === 0"
-        :temp-range-min="globalTempMin"
-        :temp-range-max="globalTempMax"
-      />
-    </div>
-  </div>
-</template>
-
 <script setup lang="ts">
 import type { ForecastResponse, DailyForecast, TemperatureUnit } from '~/types/weather.types'
 
@@ -73,3 +44,34 @@ const globalTempMax = computed(() =>
   dailyForecasts.value.length ? Math.max(...dailyForecasts.value.map(d => d.tempMax)) : 40
 )
 </script>
+
+<template>
+  <div class="card p-5">
+    <h2 class="section-label mb-4">
+      7-Day Forecast
+    </h2>
+
+    <!-- Skeleton -->
+    <div v-if="loading" class="flex flex-col gap-2">
+      <div v-for="i in 7" :key="i" class="skeleton-card h-10 rounded-[8px]"></div>
+    </div>
+
+    <!-- Data — vertical rows -->
+    <div v-else-if="dailyForecasts.length" class="flex flex-col stagger">
+      <ForecastCard
+        v-for="(day, index) in dailyForecasts"
+        :key="day.date"
+        :day-short="day.dayShort"
+        :icon="day.icon"
+        :condition="day.condition"
+        :temp-max="day.tempMax"
+        :temp-min="day.tempMin"
+        :pop="day.pop"
+        :unit="unit"
+        :is-today="index === 0"
+        :temp-range-min="globalTempMin"
+        :temp-range-max="globalTempMax"
+      />
+    </div>
+  </div>
+</template>

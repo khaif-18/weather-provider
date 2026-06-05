@@ -1,19 +1,3 @@
-<template>
-  <component
-    :is="tag"
-    :type="tag === 'button' ? type : undefined"
-    :disabled="disabled || loading"
-    :class="classes"
-    v-bind="$attrs"
-    @click="!disabled && !loading && $emit('click', $event)"
-  >
-    <BaseSpinner v-if="loading" :size="spinnerSize" class="shrink-0" />
-    <span v-if="iconLeft && !loading" class="shrink-0" aria-hidden="true">{{ iconLeft }}</span>
-    <span v-if="$slots.default" :class="{ 'sr-only': iconOnly }"><slot /></span>
-    <span v-if="iconRight && !loading" class="shrink-0" aria-hidden="true">{{ iconRight }}</span>
-  </component>
-</template>
-
 <script setup lang="ts">
 import type { Variant, Size } from '~/types/app.types'
 
@@ -103,3 +87,19 @@ const classes = computed(() => [
   (props.disabled || props.loading) ? 'cursor-not-allowed' : '',
 ])
 </script>
+
+<template>
+  <component
+    :is="tag"
+    :type="tag === 'button' ? type : undefined"
+    :disabled="disabled || loading"
+    :class="classes"
+    v-bind="$attrs"
+    @click="!disabled && !loading && $emit('click', $event)"
+  >
+    <BaseSpinner v-if="loading" :size="spinnerSize" class="shrink-0" />
+    <span v-if="iconLeft && !loading" class="shrink-0" aria-hidden="true">{{ iconLeft }}</span>
+    <span v-if="$slots.default" :class="{ 'sr-only': iconOnly }"><slot></slot></span>
+    <span v-if="iconRight && !loading" class="shrink-0" aria-hidden="true">{{ iconRight }}</span>
+  </component>
+</template>

@@ -1,9 +1,3 @@
-<template>
-  <div :class="classes" v-bind="$attrs">
-    <slot />
-  </div>
-</template>
-
 <script setup lang="ts">
 interface Props {
   variant?: 'default' | 'flat' | 'sky' | 'ghost'
@@ -49,3 +43,9 @@ const classes = computed(() => [
   props.clickable ? 'cursor-pointer active:scale-[0.99]' : '',
 ])
 </script>
+
+<template>
+  <div :class="classes" v-bind="$attrs">
+    <slot></slot>
+  </div>
+</template>

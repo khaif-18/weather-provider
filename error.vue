@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import {
-  CloudOff, Lock, KeyRound, Clock, CloudLightning, Cloud, AlertCircle,
+  CloudOff, Lock, KeyRound, Clock, CloudLightning, AlertCircle,
 } from 'lucide-vue-next'
 import type { Component } from 'vue'
 import type { NuxtError } from '#app'
@@ -47,7 +47,6 @@ function handleError() { clearError({ redirect: '/' }) }
 
 <template>
   <div class="min-h-dvh font-body flex flex-col" style="background:linear-gradient(180deg,#8a7bc2 0%,#b29fc8 35%,#d4b8a0 70%,#d4a578 100%);background-attachment:fixed">
-
     <!-- Minimal header -->
     <header class="px-6 py-4">
       <NuxtLink to="/" class="inline-flex items-center gap-2 w-fit">
@@ -56,21 +55,30 @@ function handleError() { clearError({ redirect: '/' }) }
     </header>
 
     <main class="flex-1 flex flex-col items-center justify-center px-4 text-center">
-
       <div class="relative mb-8 select-none">
-        <span class="font-body font-bold leading-none text-white/10 tracking-tighter"
-          style="font-size:clamp(5rem,18vw,10rem)">
+        <span
+          class="font-body font-bold leading-none text-white/10 tracking-tighter"
+          style="font-size:clamp(5rem,18vw,10rem)"
+        >
           {{ statusCode }}
         </span>
         <div class="absolute inset-0 flex items-center justify-center">
-          <component :is="errorIcon" :stroke-width="1" class="text-white/40 animate-float"
-            style="width:clamp(3rem,8vw,5rem);height:clamp(3rem,8vw,5rem)" />
+          <component
+            :is="errorIcon"
+            :stroke-width="1"
+            class="text-white/40 animate-float"
+            style="width:clamp(3rem,8vw,5rem);height:clamp(3rem,8vw,5rem)"
+          />
         </div>
       </div>
 
       <div class="flex flex-col gap-3 mb-8 max-w-md">
-        <h1 class="font-body font-bold text-2xl md:text-3xl text-white">{{ errorTitle }}</h1>
-        <p class="text-white/60 text-sm md:text-base leading-relaxed">{{ errorMessage }}</p>
+        <h1 class="font-body font-bold text-2xl md:text-3xl text-white">
+          {{ errorTitle }}
+        </h1>
+        <p class="text-white/60 text-sm md:text-base leading-relaxed">
+          {{ errorMessage }}
+        </p>
 
         <details v-if="isDev && error?.message" class="mt-2 text-left">
           <summary class="text-xs text-white/40 cursor-pointer font-mono hover:text-white/60 transition-colors">
@@ -81,8 +89,12 @@ function handleError() { clearError({ redirect: '/' }) }
       </div>
 
       <div class="flex flex-col sm:flex-row items-center gap-3">
-        <button class="btn-filled" @click="handleError">Try Again</button>
-        <NuxtLink to="/" class="btn-ghost">Back to Home</NuxtLink>
+        <button class="btn-filled" @click="handleError">
+          Try Again
+        </button>
+        <NuxtLink to="/" class="btn-ghost">
+          Back to Home
+        </NuxtLink>
       </div>
     </main>
 

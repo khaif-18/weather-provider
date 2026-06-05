@@ -1,3 +1,61 @@
+<script setup lang="ts">
+interface Props {
+  modelValue?: string | number
+  type?: string
+  label?: string
+  placeholder?: string
+  hint?: string
+  error?: string
+  prefixIcon?: string
+  disabled?: boolean
+  readonly?: boolean
+  required?: boolean
+  clearable?: boolean
+  block?: boolean
+  autocomplete?: string
+  size?: 'sm' | 'md' | 'lg'
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  type: 'text',
+  size: 'md',
+  clearable: false,
+  block: true,
+})
+
+defineEmits<{
+  'update:modelValue': [value: string]
+  focus: [event: FocusEvent]
+  blur: [event: FocusEvent]
+  clear: []
+  enter: [value: string | number | undefined]
+}>()
+
+defineOptions({ inheritAttrs: false })
+
+const inputId = useId()
+
+const sizeClasses = { sm: 'py-2 text-sm', md: 'py-2.5 text-sm', lg: 'py-3.5 text-base' }
+
+const inputClasses = computed(() => {
+  const hasLeft = Boolean(props.prefixIcon)
+  const hasClear = props.clearable && props.modelValue
+
+  return [
+    'w-full bg-canvas-pure text-ink font-body',
+    'border rounded-xl transition-all duration-150 outline-none',
+    'placeholder:text-ink-faint',
+    sizeClasses[props.size],
+    hasLeft ? 'pl-10' : 'pl-4',
+    hasClear ? 'pr-10' : 'pr-4',
+    props.error
+      ? 'border-red-300 focus:border-red-400 focus:shadow-[0_0_0_3px_rgba(239,68,68,0.12)]'
+      : 'border-ink-faint/60 focus:border-sky focus:shadow-input-focus shadow-input',
+    props.disabled ? 'opacity-50 cursor-not-allowed bg-canvas' : '',
+  ]
+})
+</script>
+
 <template>
   <div :class="['relative flex flex-col gap-1.5', block ? 'w-full' : '']">
     <label
@@ -61,61 +119,3 @@
     </p>
   </div>
 </template>
-
-<script setup lang="ts">
-interface Props {
-  modelValue?: string | number
-  type?: string
-  label?: string
-  placeholder?: string
-  hint?: string
-  error?: string
-  prefixIcon?: string
-  disabled?: boolean
-  readonly?: boolean
-  required?: boolean
-  clearable?: boolean
-  block?: boolean
-  autocomplete?: string
-  size?: 'sm' | 'md' | 'lg'
-}
-
-const props = withDefaults(defineProps<Props>(), {
-  type: 'text',
-  size: 'md',
-  clearable: false,
-  block: true,
-})
-
-defineEmits<{
-  'update:modelValue': [value: string]
-  focus: [event: FocusEvent]
-  blur: [event: FocusEvent]
-  clear: []
-  enter: [value: string | number | undefined]
-}>()
-
-defineOptions({ inheritAttrs: false })
-
-const inputId = useId()
-
-const sizeClasses = { sm: 'py-2 text-sm', md: 'py-2.5 text-sm', lg: 'py-3.5 text-base' }
-
-const inputClasses = computed(() => {
-  const hasLeft = Boolean(props.prefixIcon)
-  const hasClear = props.clearable && props.modelValue
-
-  return [
-    'w-full bg-canvas-pure text-ink font-body',
-    'border rounded-xl transition-all duration-150 outline-none',
-    'placeholder:text-ink-faint',
-    sizeClasses[props.size],
-    hasLeft ? 'pl-10' : 'pl-4',
-    hasClear ? 'pr-10' : 'pr-4',
-    props.error
-      ? 'border-red-300 focus:border-red-400 focus:shadow-[0_0_0_3px_rgba(239,68,68,0.12)]'
-      : 'border-ink-faint/60 focus:border-sky focus:shadow-input-focus shadow-input',
-    props.disabled ? 'opacity-50 cursor-not-allowed bg-canvas' : '',
-  ]
-})
-</script>

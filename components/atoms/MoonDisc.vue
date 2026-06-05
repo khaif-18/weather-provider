@@ -1,20 +1,3 @@
-<template>
-  <!-- Moon disc rendered from lunar-cycle fraction (0=new … 0.5=full). -->
-  <svg viewBox="0 0 40 40" :width="size" :height="size" class="shrink-0">
-    <defs>
-      <clipPath :id="clipId">
-        <circle cx="20" cy="20" :r="R" />
-      </clipPath>
-    </defs>
-    <!-- Lit base -->
-    <circle cx="20" cy="20" :r="R" fill="#e9e7ff" />
-    <!-- Shadow overlay -->
-    <path :d="shadowPath" fill="#2a2a44" :clip-path="`url(#${clipId})`" />
-    <!-- Rim -->
-    <circle cx="20" cy="20" :r="R" fill="none" stroke="currentColor" stroke-opacity="0.15" stroke-width="1" class="text-ink" />
-  </svg>
-</template>
-
 <script setup lang="ts">
 const props = withDefaults(defineProps<{
   phase: number   // 0..1 lunar cycle fraction
@@ -37,3 +20,39 @@ const shadowPath = computed(() => {
   return `M20,${20 - R} A${R},${R} 0 0 ${sweepLimb} 20,${20 + R} A${rx.toFixed(2)},${R} 0 0 ${sweepTerm} 20,${20 - R} Z`
 })
 </script>
+
+<template>
+  <!-- Moon disc rendered from lunar-cycle fraction (0=new … 0.5=full). -->
+  <svg
+    viewBox="0 0 40 40"
+    :width="size"
+    :height="size"
+    class="shrink-0"
+  >
+    <defs>
+      <clipPath :id="clipId">
+        <circle cx="20" cy="20" :r="R" />
+      </clipPath>
+    </defs>
+    <!-- Lit base -->
+    <circle
+      cx="20"
+      cy="20"
+      :r="R"
+      fill="#e9e7ff"
+    />
+    <!-- Shadow overlay -->
+    <path :d="shadowPath" fill="#2a2a44" :clip-path="`url(#${clipId})`" />
+    <!-- Rim -->
+    <circle
+      cx="20"
+      cy="20"
+      :r="R"
+      fill="none"
+      stroke="currentColor"
+      stroke-opacity="0.15"
+      stroke-width="1"
+      class="text-ink"
+    />
+  </svg>
+</template>

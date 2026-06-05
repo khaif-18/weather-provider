@@ -1,3 +1,46 @@
+<script setup lang="ts">
+import { Search, MapPin } from 'lucide-vue-next'
+import type { GeoLocation } from '~/types/weather.types'
+
+const emit = defineEmits<{ select: [city: GeoLocation]; search: [query: string] }>()
+
+const api          = useWeatherApi()
+const query        = ref('')
+const showDropdown = ref(false)
+const suggestions  = ref<GeoLocation[]>([])
+const isPending    = ref(false)
+
+let debounceTimer: ReturnType<typeof setTimeout> | null = null
+
+function debouncedFetch(q: string) {
+  if (debounceTimer) clearTimeout(debounceTimer)
+  debounceTimer = setTimeout(async () => {
+    if (q.length < 2) { suggestions.value = []; return }
+    try {
+      isPending.value = true
+      suggestions.value = await api.searchCities(q)
+      showDropdown.value = true
+    }
+    catch { suggestions.value = [] }
+    finally { isPending.value = false }
+  }, 400)
+}
+
+function handleInput() {
+  if (!query.value) { suggestions.value = []; showDropdown.value = false; return }
+  debouncedFetch(query.value)
+}
+function handleSearch()                { if (query.value.trim()) emit('search', query.value.trim()); showDropdown.value = false }
+function handleSelect(city: GeoLocation) { query.value = city.name; showDropdown.value = false; suggestions.value = []; emit('select', city) }
+
+function onOutsideClick(e: MouseEvent) {
+  const el = document.querySelector('[data-searchbar]')
+  if (el && !el.contains(e.target as Node)) showDropdown.value = false
+}
+onMounted(() => document.addEventListener('click', onOutsideClick))
+onUnmounted(() => document.removeEventListener('click', onOutsideClick))
+</script>
+
 <template>
   <div class="relative w-full" data-searchbar>
     <div class="relative flex items-center">
@@ -41,8 +84,12 @@
           >
             <MapPin :size="13" :stroke-width="2" class="text-dusk-blue shrink-0" />
             <div class="min-w-0">
-              <p class="text-ink text-sm font-medium truncate font-body">{{ city.name }}</p>
-              <p class="text-ink/50 text-xs font-body">{{ [city.state, city.country].filter(Boolean).join(', ') }}</p>
+              <p class="text-ink text-sm font-medium truncate font-body">
+                {{ city.name }}
+              </p>
+              <p class="text-ink/50 text-xs font-body">
+                {{ [city.state, city.country].filter(Boolean).join(', ') }}
+              </p>
             </div>
           </li>
         </ul>
@@ -50,49 +97,6 @@
     </Transition>
   </div>
 </template>
-
-<script setup lang="ts">
-import { Search, MapPin } from 'lucide-vue-next'
-import type { GeoLocation } from '~/types/weather.types'
-
-const emit = defineEmits<{ select: [city: GeoLocation]; search: [query: string] }>()
-
-const api          = useWeatherApi()
-const query        = ref('')
-const showDropdown = ref(false)
-const suggestions  = ref<GeoLocation[]>([])
-const isPending    = ref(false)
-
-let debounceTimer: ReturnType<typeof setTimeout> | null = null
-
-function debouncedFetch(q: string) {
-  if (debounceTimer) clearTimeout(debounceTimer)
-  debounceTimer = setTimeout(async () => {
-    if (q.length < 2) { suggestions.value = []; return }
-    try {
-      isPending.value = true
-      suggestions.value = await api.searchCities(q)
-      showDropdown.value = true
-    }
-    catch { suggestions.value = [] }
-    finally { isPending.value = false }
-  }, 400)
-}
-
-function handleInput() {
-  if (!query.value) { suggestions.value = []; showDropdown.value = false; return }
-  debouncedFetch(query.value)
-}
-function handleSearch()                { if (query.value.trim()) emit('search', query.value.trim()); showDropdown.value = false }
-function handleSelect(city: GeoLocation) { query.value = city.name; showDropdown.value = false; suggestions.value = []; emit('select', city) }
-
-function onOutsideClick(e: MouseEvent) {
-  const el = document.querySelector('[data-searchbar]')
-  if (el && !el.contains(e.target as Node)) showDropdown.value = false
-}
-onMounted(() => document.addEventListener('click', onOutsideClick))
-onUnmounted(() => document.removeEventListener('click', onOutsideClick))
-</script>
 
 <style scoped>
 .dropdown-enter-active, .dropdown-leave-active { transition: all 0.15s ease; }

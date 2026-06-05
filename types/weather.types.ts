@@ -169,3 +169,32 @@ export interface AirQualityResponse {
   coord: Coord
   list: AirQualityItem[]
 }
+
+// Open-Meteo — Pollen (air-quality endpoint, Europe-only coverage)
+export interface PollenCurrent {
+  time: string
+  alder_pollen?: number | null
+  birch_pollen?: number | null
+  grass_pollen?: number | null
+  mugwort_pollen?: number | null
+  olive_pollen?: number | null
+  ragweed_pollen?: number | null
+}
+export interface PollenResponse {
+  current?: PollenCurrent
+}
+
+// Open-Meteo — Marine (tide via sea_level_height_msl, coastal/ocean only)
+export interface MarineResponse {
+  current?: {
+    time: string
+    wave_height?: number | null
+    sea_level_height_msl?: number | null
+  }
+  hourly?: {
+    time: string[]
+    sea_level_height_msl?: Array<number | null>
+  }
+  error?: boolean
+  reason?: string
+}

@@ -1,6 +1,79 @@
+<script setup lang="ts">
+import { useShare, useClipboard } from '@vueuse/core'
+import { MapPin, Wind, Droplets, Eye, Sunrise, Sunset, RefreshCw, Share2, Check } from 'lucide-vue-next'
+import type { CurrentWeatherResponse, TemperatureUnit } from '~/types/weather.types'
+
+const props = defineProps<{
+  data: CurrentWeatherResponse
+  unit: TemperatureUnit
+  minutesAgo?: number | null
+  refetching?: boolean
+}>()
+
+defineEmits<{ refresh: [] }>()
+
+// ── Share current weather (native share API, clipboard fallback) ──
+const { share, isSupported: shareSupported } = useShare()
+const { copy } = useClipboard()
+const shareDone = ref(false)
+
+const shareText = computed(() =>
+  `${props.data.name} — ${Math.round(props.data.main.temp)}°${props.unit === 'metric' ? 'C' : 'F'}, `
+  + `${capitalize(props.data.weather[0]?.description ?? '')}. `
+  + `Feels like ${formatTemp(props.data.main.feels_like, props.unit)}.`
+)
+
+const shareTitle = computed(() =>
+  shareSupported.value ? 'Share weather' : (shareDone.value ? 'Copied!' : 'Copy weather')
+)
+
+async function shareWeather() {
+  const url = typeof window !== 'undefined' ? window.location.href : 'https://kaether.netlify.app'
+  if (shareSupported.value) {
+    try { await share({ title: 'Kaether Weather', text: shareText.value, url }) }
+    catch { /* user dismissed the share sheet */ }
+  }
+  else {
+    await copy(`${shareText.value} ${url}`)
+    shareDone.value = true
+    setTimeout(() => { shareDone.value = false }, 2000)
+  }
+}
+
+const unitSymbol  = computed(() => props.unit === 'metric' ? 'C' : 'F')
+const cityName    = computed(() => props.data.name)
+const country     = computed(() => props.data.sys.country)
+const temp        = computed(() => props.data.main.temp)
+const feelsLike   = computed(() => props.data.main.feels_like)
+const tempMax     = computed(() => props.data.main.temp_max)
+const tempMin     = computed(() => props.data.main.temp_min)
+const description = computed(() => capitalize(props.data.weather[0]?.description ?? ''))
+const iconUrl     = computed(() => getWeatherIconUrl(props.data.weather[0]?.icon ?? '01d', '4x'))
+
+const currentDate = computed(() =>
+  new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })
+)
+
+const sunriseTime = computed(() => formatTime(props.data.sys.sunrise, props.data.timezone))
+const sunsetTime  = computed(() => formatTime(props.data.sys.sunset, props.data.timezone))
+
+const dayProgress = computed(() => {
+  const now = Date.now() / 1000
+  const { sunrise, sunset } = props.data.sys
+  if (now < sunrise) return 0
+  if (now > sunset)  return 100
+  return Math.round(((now - sunrise) / (sunset - sunrise)) * 100)
+})
+
+const dayProgressLabel = computed(() => {
+  if (dayProgress.value === 0) return 'Before sunrise'
+  if (dayProgress.value === 100) return 'After sunset'
+  return `${100 - dayProgress.value}% of daylight remaining`
+})
+</script>
+
 <template>
   <div class="card p-6 md:p-8 animate-fade-up">
-
     <!-- Location + date -->
     <div class="flex items-center justify-between mb-5">
       <div class="flex items-center gap-2">
@@ -12,13 +85,21 @@
           style="padding-top:3px;padding-bottom:3px"
         >{{ country }}</span>
       </div>
-      <span class="text-xs text-ink/40 font-body">{{ currentDate }}</span>
+      <div class="flex items-center gap-2">
+        <span class="text-xs text-ink/40 font-body">{{ currentDate }}</span>
+        <button
+          class="text-ink/35 hover:text-signal-blue transition-colors p-1 -mr-1 rounded shrink-0"
+          :title="shareTitle"
+          @click="shareWeather"
+        >
+          <component :is="shareDone ? Check : Share2" :size="14" :stroke-width="1.875" />
+        </button>
+      </div>
     </div>
 
     <!-- Temp + condition -->
     <div class="flex items-start justify-between gap-4">
       <div class="flex flex-col gap-3">
-
         <div class="flex items-start gap-1">
           <span
             class="font-body font-semibold text-ink leading-none tracking-tight"
@@ -57,7 +138,8 @@
       </div>
 
       <img
-        :src="iconUrl" :alt="description"
+        :src="iconUrl"
+        :alt="description"
         class="w-24 h-24 md:w-32 md:h-32 object-contain animate-float shrink-0"
         style="filter:drop-shadow(0 8px 24px rgba(66,97,136,0.25))"
       />
@@ -75,7 +157,7 @@
             class="absolute left-0 top-0 h-full rounded-full transition-all duration-1000"
             style="background:linear-gradient(90deg,#f5a623,#7ab3e8)"
             :style="{ width: `${dayProgress}%` }"
-          />
+          ></div>
         </div>
         <div class="flex items-center gap-1.5 shrink-0">
           <span class="text-xs font-mono text-ink/50">{{ sunsetTime }}</span>
@@ -85,7 +167,9 @@
 
       <!-- Refresh footer -->
       <div class="flex items-center justify-between mt-3">
-        <p class="text-[10px] text-ink/30 font-body">{{ dayProgressLabel }}</p>
+        <p class="text-[10px] text-ink/30 font-body">
+          {{ dayProgressLabel }}
+        </p>
         <div class="flex items-center gap-2">
           <span class="text-[10px] text-ink/30 font-body">
             {{ minutesAgo !== null ? (minutesAgo === 0 ? 'Just updated' : `Updated ${minutesAgo}m ago`) : '' }}
@@ -103,48 +187,3 @@
     </div>
   </div>
 </template>
-
-<script setup lang="ts">
-import { MapPin, Wind, Droplets, Eye, Sunrise, Sunset, RefreshCw } from 'lucide-vue-next'
-import type { CurrentWeatherResponse, TemperatureUnit } from '~/types/weather.types'
-
-const props = defineProps<{
-  data: CurrentWeatherResponse
-  unit: TemperatureUnit
-  minutesAgo?: number | null
-  refetching?: boolean
-}>()
-
-defineEmits<{ refresh: [] }>()
-
-const unitSymbol  = computed(() => props.unit === 'metric' ? 'C' : 'F')
-const cityName    = computed(() => props.data.name)
-const country     = computed(() => props.data.sys.country)
-const temp        = computed(() => props.data.main.temp)
-const feelsLike   = computed(() => props.data.main.feels_like)
-const tempMax     = computed(() => props.data.main.temp_max)
-const tempMin     = computed(() => props.data.main.temp_min)
-const description = computed(() => capitalize(props.data.weather[0]?.description ?? ''))
-const iconUrl     = computed(() => getWeatherIconUrl(props.data.weather[0]?.icon ?? '01d', '4x'))
-
-const currentDate = computed(() =>
-  new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })
-)
-
-const sunriseTime = computed(() => formatTime(props.data.sys.sunrise, props.data.timezone))
-const sunsetTime  = computed(() => formatTime(props.data.sys.sunset, props.data.timezone))
-
-const dayProgress = computed(() => {
-  const now = Date.now() / 1000
-  const { sunrise, sunset } = props.data.sys
-  if (now < sunrise) return 0
-  if (now > sunset)  return 100
-  return Math.round(((now - sunrise) / (sunset - sunrise)) * 100)
-})
-
-const dayProgressLabel = computed(() => {
-  if (dayProgress.value === 0) return 'Before sunrise'
-  if (dayProgress.value === 100) return 'After sunset'
-  return `${100 - dayProgress.value}% of daylight remaining`
-})
-</script>

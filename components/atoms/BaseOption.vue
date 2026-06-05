@@ -1,14 +1,3 @@
-<template>
-  <option
-    :value="value"
-    :disabled="disabled"
-    :selected="selected"
-    class="bg-sky-deep text-frost-pale"
-  >
-    <slot>{{ label }}</slot>
-  </option>
-</template>
-
 <script setup lang="ts">
 interface Props {
   value: string | number
@@ -19,3 +8,14 @@ interface Props {
 
 defineProps<Props>()
 </script>
+
+<template>
+  <option
+    :value="value"
+    :disabled="disabled"
+    :selected="selected"
+    class="bg-sky-deep text-frost-pale"
+  >
+    <slot>{{ label }}</slot>
+  </option>
+</template>

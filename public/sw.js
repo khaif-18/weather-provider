@@ -38,6 +38,19 @@ registerRoute(
   })
 )
 
+// ── Open-Meteo pollen + marine ────────────────────────────────────
+registerRoute(
+  ({ url }) => url.hostname.endsWith('open-meteo.com'),
+  new NetworkFirst({
+    cacheName: 'open-meteo',
+    networkTimeoutSeconds: 6,
+    plugins: [
+      new ExpirationPlugin({ maxEntries: 30, maxAgeSeconds: 30 * 60 }),
+      new CacheableResponsePlugin({ statuses: [0, 200] }),
+    ],
+  })
+)
+
 // ── OWM weather icons ─────────────────────────────────────────────
 // Cache-first: icons don't change; 7-day TTL.
 registerRoute(

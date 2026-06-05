@@ -1,29 +1,3 @@
-<template>
-  <div class="card overflow-hidden">
-    <div class="flex items-center justify-between px-5 py-4 border-b border-ink-faint/20">
-      <h2 class="section-label">
-        Weather Map
-      </h2>
-      <div class="flex bg-canvas rounded-pill p-0.5 gap-0.5">
-        <button
-          v-for="layer in layers"
-          :key="layer.value"
-          :class="[
-            'px-2.5 py-1 rounded-pill text-[11px] font-body font-medium transition-all duration-150',
-            activeLayer === layer.value
-              ? 'bg-canvas-pure text-ink shadow-btn'
-              : 'text-ink/45 hover:text-ink',
-          ]"
-          @click="setLayer(layer.value)"
-        >
-          {{ layer.label }}
-        </button>
-      </div>
-    </div>
-    <div ref="mapEl" class="w-full h-64 md:h-80 z-0" />
-  </div>
-</template>
-
 <script setup lang="ts">
 import { useDark } from '@vueuse/core'
 import L from 'leaflet'
@@ -108,3 +82,29 @@ watch([() => props.lat, () => props.lon], ([lat, lon]) => {
 
 onUnmounted(() => { map?.remove() })
 </script>
+
+<template>
+  <div class="card overflow-hidden">
+    <div class="flex items-center justify-between px-5 py-4 border-b border-ink-faint/20">
+      <h2 class="section-label">
+        Weather Map
+      </h2>
+      <div class="flex bg-canvas rounded-pill p-0.5 gap-0.5">
+        <button
+          v-for="layer in layers"
+          :key="layer.value"
+          :class="[
+            'px-2.5 py-1 rounded-pill text-[11px] font-body font-medium transition-all duration-150',
+            activeLayer === layer.value
+              ? 'bg-canvas-pure text-ink shadow-btn'
+              : 'text-ink/45 hover:text-ink',
+          ]"
+          @click="setLayer(layer.value)"
+        >
+          {{ layer.label }}
+        </button>
+      </div>
+    </div>
+    <div ref="mapEl" class="w-full h-64 md:h-80 z-0"></div>
+  </div>
+</template>
