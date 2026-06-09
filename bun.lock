@@ -3,7 +3,7 @@
   "configVersion": 1,
   "workspaces": {
     "": {
-      "name": "k-weat",
+      "name": "kaether",
       "dependencies": {
         "@pinia/nuxt": "^0.11.3",
         "@tanstack/vue-query": "^5.62.7",
