@@ -27,7 +27,7 @@ const iconUrl = computed(() => getWeatherIconUrl(props.icon, '2x'))
 <template>
   <button
     :class="[
-      'flex flex-col items-center gap-2 px-3 py-3 rounded-[8px] transition-all duration-150 min-w-[60px]',
+      'flex flex-col items-center gap-2 px-3 py-3 rounded-[8px] transition-all duration-150 min-w-[60px] m-1',
       'focus:outline-none',
       isSelected
         ? 'bg-sky-mist ring-2 ring-signal-blue/25'

@@ -43,7 +43,7 @@ function selectCity(city: GeoLocation) {
           'flex items-center gap-2 pl-3 pr-2 py-1.5 rounded-pill text-sm font-body font-medium',
           'transition-all duration-150 shrink-0 border',
           appStore.cityName === city.name
-            ? 'bg-white text-ink border-white/0 shadow-btn'
+            ? 'bg-ink/20 text-ink border-ink shadow-btn'
             : 'bg-transparent text-white/80 border-white/40 hover:bg-white/10 hover:text-white',
         ]"
         @click="selectCity(city)"
@@ -52,7 +52,7 @@ function selectCity(city: GeoLocation) {
         <!-- Mini temperature (from parallel queries) -->
         <span
           v-if="cityTemps[i]"
-          :class="['text-[11px] font-mono', appStore.cityName === city.name ? 'text-ink/50' : 'text-white/50']"
+          :class="['text-[11px] font-mono', appStore.cityName === city.name ? 'text-ink/90' : 'text-white/50']"
         >{{ cityTemps[i] }}</span>
 
         <span
