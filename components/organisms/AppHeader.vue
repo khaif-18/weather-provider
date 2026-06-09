@@ -41,7 +41,7 @@ async function handleGeolocate() {
         <!-- Wordmark -->
         <NuxtLink to="/" class="shrink-0 group order-1">
           <span
-            class="font-cursive font-bold text-[28px] sm:text-[30px] text-white leading-none tracking-tight
+            class="font-cursive font-medium text-[28px] sm:text-[30px] text-white leading-none
                        group-hover:opacity-80 transition-opacity"
           >
             Kaether

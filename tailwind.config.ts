@@ -14,10 +14,12 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        display: ['Inter', 'ui-sans-serif', 'system-ui', '-apple-system', 'sans-serif'],
-        body:    ['Inter', 'ui-sans-serif', 'system-ui', '-apple-system', 'sans-serif'],
-        mono:    ['"Fira Code"', 'monospace'],
-        cursive: ['Caveat', 'cursive'],
+        display:    ['Inter', 'ui-sans-serif', 'system-ui', '-apple-system', 'sans-serif'],
+        body:       ['Inter', 'ui-sans-serif', 'system-ui', '-apple-system', 'sans-serif'],
+        mono:       ['"Fira Code"', 'monospace'],
+        cursive:    ['Caveat', 'cursive'],
+        // Control Compressed substitute — Druk Wide equivalent (DESIGN.md)
+        compressed: ['"Bebas Neue"', 'ui-sans-serif', 'sans-serif'],
       },
       colors: {
         // ── CSS-variable-backed colors — auto-swap in dark mode ──

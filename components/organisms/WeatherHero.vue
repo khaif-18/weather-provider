@@ -100,12 +100,12 @@ const dayProgressLabel = computed(() => {
     <!-- Temp + condition -->
     <div class="flex items-start justify-between gap-4">
       <div class="flex flex-col gap-3">
-        <div class="flex items-start gap-1">
+        <div class="flex items-start gap-0.5">
           <span
-            class="font-body font-semibold text-ink leading-none tracking-tight"
-            style="font-size:clamp(4.5rem,11vw,7rem);letter-spacing:-0.04em"
+            class="font-compressed text-ink leading-none"
+            style="font-size:clamp(5.5rem,13vw,8.5rem)"
           >{{ Math.round(temp) }}</span>
-          <span class="text-xl md:text-2xl font-medium text-ink/40 mt-3">°{{ unitSymbol }}</span>
+          <span class="text-2xl font-body font-medium text-ink/40 mt-5">°{{ unitSymbol }}</span>
         </div>
 
         <p class="font-cursive font-bold text-xl md:text-2xl text-dusk-blue leading-tight">
@@ -141,7 +141,7 @@ const dayProgressLabel = computed(() => {
         :src="iconUrl"
         :alt="description"
         class="w-24 h-24 md:w-32 md:h-32 object-contain animate-float shrink-0"
-        style="filter:drop-shadow(0 8px 24px rgba(66,97,136,0.25))"
+        style="filter:drop-shadow(0 0 10px rgba(138,123,194,0.35)) drop-shadow(0 8px 24px rgba(66,97,136,0.28))"
       />
     </div>
 

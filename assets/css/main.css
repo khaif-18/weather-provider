@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Caveat:wght@500;700&family=Fira+Code:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600&family=Caveat:wght@400;500;700&family=Fira+Code:wght@400;500&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -8,6 +8,29 @@
    CSS CUSTOM PROPERTIES — light mode defaults
    ══════════════════════════════════════════════════════════════ */
 :root {
+  /* ── Air design tokens (DESIGN.md) ──────────────────────────── */
+  --color-sky-gradient:    #a893c4;
+  --gradient-sky-gradient: linear-gradient(180deg, #8a7bc2 0%, #b29fc8 35%, #d4b8a0 70%, #d4a578 100%);
+  --color-sculpture-ink:   #1b1b1b;
+  --color-pure-onyx:       #000000;
+  --color-cloud-white:     #ffffff;
+  --color-soft-fog:        #f5f5f5;
+  --color-dusk-blue:       #426188;
+  --color-signal-blue:     #2b7fff;
+
+  /* ── Spacing (DESIGN.md base unit: 4px) ─────────────────────── */
+  --spacing-unit: 4px;
+  --section-gap:  48px;
+  --card-padding: 24px;
+  --element-gap:  8px;
+
+  /* ── Border radii ────────────────────────────────────────────── */
+  --radius-cards:   11px;
+  --radius-pills:   9999px;
+  --radius-images:  8px;
+  --radius-inputs:  4px;
+  --radius-buttons: 8px;
+
   /* Sky gradient */
   --sky-bg: linear-gradient(180deg, #8a7bc2 0%, #b29fc8 35%, #d4b8a0 70%, #d4a578 100%);
 
@@ -26,9 +49,10 @@
   --color-sky-pale: 239 245 255;
   --color-sky-mist: 245 249 255;
 
-  /* Elevation shadows */
-  --shadow-card:    0 8px 32px rgba(27,27,27,0.10);
-  --shadow-card-md: 0 12px 40px rgba(27,27,27,0.13);
+  /* Elevation shadows (DESIGN.md values) */
+  --shadow-card:      0 8px 32px rgba(27,27,27,0.12);
+  --shadow-card-md:   0 12px 40px rgba(27,27,27,0.15);
+  --shadow-dropdown:  0 4px 16px rgba(27,27,27,0.08);
 }
 
 /* ── Night / dark mode overrides ────────────────────────────── */

@@ -50,11 +50,10 @@ onUnmounted(() => document.removeEventListener('click', onOutsideClick))
         type="search"
         placeholder="Search city…"
         autocomplete="off"
-        class="w-full bg-canvas-pure text-ink font-body text-sm font-medium
-               pl-8 pr-4 py-2.5 rounded-[8px] border border-ink-faint/25
+        class="w-full bg-canvas text-ink font-body text-sm font-medium
+               pl-8 pr-4 py-2.5 rounded border border-ink/20
                placeholder:text-ink/30 outline-none transition-all duration-150
-               focus:border-signal-blue/50 focus:shadow-[0_0_0_2px_rgba(43,127,255,0.18)]"
-        style="box-shadow: var(--shadow-card)"
+               focus:border-signal-blue focus:shadow-[0_0_0_2px_rgba(43,127,255,0.15)]"
         @input="handleInput"
         @keydown.enter="handleSearch"
         @keydown.escape="showDropdown = false"
@@ -68,8 +67,8 @@ onUnmounted(() => document.removeEventListener('click', onOutsideClick))
       <div
         v-if="suggestions.length && showDropdown"
         class="absolute top-full mt-2 left-0 right-0 z-50 bg-canvas-pure overflow-hidden
-               rounded-card border border-ink-faint/20"
-        style="box-shadow: var(--shadow-card-md)"
+               rounded-lg border border-ink-faint/15"
+        style="box-shadow: var(--shadow-dropdown)"
       >
         <ul role="listbox" class="py-1">
           <li
