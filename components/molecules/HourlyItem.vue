@@ -50,6 +50,7 @@ const iconUrl = computed(() => getWeatherIconUrl(props.icon, '2x'))
       :src="iconUrl"
       :alt="condition"
       :class="['w-8 h-8 object-contain transition-transform duration-200', isSelected ? 'scale-110' : '']"
+      style="filter: drop-shadow(0 0 2px rgba(66,97,136,0.65)) drop-shadow(0 0 5px rgba(66,97,136,0.30))"
       loading="lazy"
     />
 

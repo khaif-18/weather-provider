@@ -51,6 +51,7 @@ const rangeWidth  = computed(() => Math.max(6, Math.round(((props.tempMax - prop
         :src="iconUrl"
         :alt="condition"
         class="w-7 h-7 object-contain shrink-0"
+        style="filter: drop-shadow(0 0 2px rgba(66,97,136,0.65)) drop-shadow(0 0 5px rgba(66,97,136,0.30))"
         loading="lazy"
       />
 
@@ -90,7 +91,12 @@ const rangeWidth  = computed(() => Math.max(6, Math.round(((props.tempMax - prop
     <Transition name="detail-slide">
       <div v-if="isExpanded" class="px-2 pb-3 pt-0">
         <div class="flex items-center gap-3 pt-2 border-t border-ink-faint/20">
-          <img :src="iconUrl" :alt="condition" class="w-10 h-10 object-contain shrink-0" />
+          <img
+            :src="iconUrl"
+            :alt="condition"
+            class="w-10 h-10 object-contain shrink-0"
+            style="filter: drop-shadow(0 0 2px rgba(66,97,136,0.65)) drop-shadow(0 0 5px rgba(66,97,136,0.30))"
+          />
           <div>
             <p class="text-xs font-body font-medium text-ink capitalize">
               {{ condition }}
