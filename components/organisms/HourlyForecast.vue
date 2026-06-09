@@ -57,6 +57,7 @@ watch(() => props.data, () => { selectedIndex.value = null })
             :icon="hour.icon"
             :condition="hour.condition"
             :temp="hour.temp"
+            :feels-like="hour.feelsLike"
             :pop="hour.pop"
             :unit="unit"
             :is-now="hour.isNow"

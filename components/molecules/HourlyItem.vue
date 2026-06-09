@@ -7,6 +7,7 @@ interface Props {
   icon: string
   condition: string
   temp: number
+  feelsLike?: number
   pop: number
   unit?: TemperatureUnit
   isNow?: boolean
@@ -18,6 +19,10 @@ const props = withDefaults(defineProps<Props>(), {
   isNow: false,
   isSelected: false,
 })
+
+const showFeelsLike = computed(() =>
+  props.feelsLike !== undefined && Math.abs(props.feelsLike - props.temp) >= 2
+)
 
 defineEmits<{ click: [] }>()
 
@@ -69,5 +74,11 @@ const iconUrl = computed(() => getWeatherIconUrl(props.icon, '2x'))
     >
       {{ formatTemp(temp, unit) }}
     </span>
+
+    <!-- Feels-like, hanya tampil saat selisih ≥ 2° dari temp -->
+    <span v-if="showFeelsLike" class="text-[10px] font-body text-ink/40 leading-none">
+      {{ formatTemp(feelsLike!, unit) }}
+    </span>
+    <div v-else class="h-3"></div>
   </button>
 </template>

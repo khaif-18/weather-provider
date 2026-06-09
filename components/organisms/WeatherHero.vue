@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useShare, useClipboard } from '@vueuse/core'
+import { useShare, useClipboard, useTransition, TransitionPresets } from '@vueuse/core'
 import { MapPin, Wind, Droplets, Eye, Sunrise, Sunset, RefreshCw, Share2, Check } from 'lucide-vue-next'
 import type { CurrentWeatherResponse, TemperatureUnit } from '~/types/weather.types'
 
@@ -45,6 +45,12 @@ const cityName    = computed(() => props.data.name)
 const country     = computed(() => props.data.sys.country)
 const temp        = computed(() => props.data.main.temp)
 const feelsLike   = computed(() => props.data.main.feels_like)
+
+// Count-up animation: animates whenever temperature changes (city switch, refresh)
+const animatedTemp = useTransition(temp, {
+  duration: 700,
+  transition: TransitionPresets.easeOutCubic,
+})
 const tempMax     = computed(() => props.data.main.temp_max)
 const tempMin     = computed(() => props.data.main.temp_min)
 const description = computed(() => capitalize(props.data.weather[0]?.description ?? ''))
@@ -104,7 +110,7 @@ const dayProgressLabel = computed(() => {
           <span
             class="font-compressed text-ink leading-none"
             style="font-size:clamp(5.5rem,13vw,8.5rem)"
-          >{{ Math.round(temp) }}</span>
+          >{{ Math.round(animatedTemp) }}</span>
           <span class="text-2xl font-body font-medium text-ink/40 mt-5">°{{ unitSymbol }}</span>
         </div>
 
